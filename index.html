@@ -1,325 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Information Portal</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f2f5;
-        }
+<script>
+// Modify the findTimeMatches function
+function findTimeMatches(springCourse) {
+    const matches = [];
+    const springTimes = extractTimeSlots(springCourse.classSchedule);
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .button-container {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .semester-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .semester-button.active {
-            background-color: #0056b3;
-        }
-
-        .semester-button:hover {
-            background-color: #0056b3;
-        }
-
-        .search-container {
-            margin-bottom: 20px;
-        }
-
-        #searchInput {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .tba-info {
-            color: #721c24;
-            background-color: #f8d7da;
-            padding: 8px;
-            margin-top: 4px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .historical-match {
-            color: #155724;
-            background-color: #d4edda;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-top: 4px;
-            font-size: 0.9em;
-        }
-
-        .error-message {
-            color: #721c24;
-            background-color: #f8d7da;
-            padding: 12px;
-            border-radius: 4px;
-            margin: 10px 0;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Course Information Portal</h1>
-
-        <div class="button-container">
-            <button class="semester-button active" data-semester="fall" data-file="old-usisdump.json">Fall 2024</button>
-            <button class="semester-button" data-semester="summer" data-file="summer-usisdump.json">Summer 2024</button>
-            <button class="semester-button" data-semester="spring" data-file="spring-usisdump.json">Spring 2025</button>
-        </div>
-
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search by Course Code, Faculty, or Name...">
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Course Code</th>
-                    <th>Faculty Initial</th>
-                    <th>Full Name</th>
-                    <th>Class Schedule</th>
-                    <th>Exam Time</th>
-                </tr>
-            </thead>
-            <tbody id="courseTable">
-            </tbody>
-        </table>
-    </div>
-
-    <script>
-        let activeButton = document.querySelector('.semester-button.active');
-        const tableBody = document.getElementById('courseTable');
-        const searchInput = document.getElementById('searchInput');
-
-        const semesterData = {
-            fall: null,
-            summer: null,
-            spring: null
-        };
-
-        function normalizeCourseData(data, format) {
-            if (format === 'spring25') {
-                return data.map(course => {
-                    const examInfo = course.sectionSchedule ?
-                        `Mid: ${course.sectionSchedule.midExamDetail}\nFinal: ${course.sectionSchedule.finalExamDetail}` :
-                        'TBA';
-
-                    return {
-                        courseCode: course.courseCode,
-                        courseDetails: `[${course.sectionName}]`,
-                        empShortName: course.faculties || 'TBA',
-                        empName: course.faculties || 'TBA',
-                        classSchedule: course.preRegSchedule || '',
-                        examDate: examInfo
-                    };
+    // Check Fall 24
+    if (semesterData.fall) {
+        semesterData.fall.forEach(course => {
+            const fallTimes = extractTimeSlots(course.classSchedule);
+            if (compareTimeSlots(springTimes, fallTimes)) {
+                matches.push({
+                    semester: 'Fall-24',
+                    initial: course.empShortName
                 });
-            } else {
-                return data;
             }
-        }
+        });
+    }
 
-        function extractSection(courseDetails) {
-            if (typeof courseDetails !== 'string') return '';
-            const sectionMatch = courseDetails.match(/\[(.*?)\]/);
-            return sectionMatch ? sectionMatch[1] : '';
-        }
-
-        function findHistoricalInstructor(courseCode, section) {
-            const matches = [];
-
-            if (semesterData.fall) {
-                const fallMatch = semesterData.fall.find(course =>
-                    course.courseCode === courseCode &&
-                    extractSection(course.courseDetails) === section &&
-                    course.empName !== 'TBA'
-                );
-                if (fallMatch) {
-                    matches.push({ semester: 'Fall 2024', instructor: fallMatch.empName });
-                }
-            }
-
-            if (semesterData.summer) {
-                const summerMatch = semesterData.summer.find(course =>
-                    course.courseCode === courseCode &&
-                    extractSection(course.courseDetails) === section &&
-                    course.empName !== 'TBA'
-                );
-                if (summerMatch) {
-                    matches.push({ semester: 'Summer 2024', instructor: summerMatch.empName });
-                }
-            }
-
-            return matches;
-        }
-
-        function loadCourseData(filename, semester) {
-            tableBody.innerHTML = '';
-
-            fetch(filename)
-                .then(response => response.json())
-                .then(rawData => {
-                    let data = rawData;
-                    if (semester !== 'spring') {
-                        data = rawData.data;
-                    }
-
-                    const processedData = normalizeCourseData(data, semester === 'spring' ? 'spring25' : 'old');
-                    semesterData[semester] = processedData;
-
-                    processedData.forEach(course => {
-                        const section = semester === 'spring' ?
-                            course.courseDetails.replace(/[\[\]]/g, '') :
-                            extractSection(course.courseDetails);
-
-                        const row = document.createElement('tr');
-
-                        let historicalInfo = '';
-                        if (semester === 'spring' && course.empName === 'TBA') {
-                            const historicalMatches = findHistoricalInstructor(course.courseCode, section);
-                            if (historicalMatches.length > 0) {
-                                historicalInfo = historicalMatches.map(match =>
-                                    `<div class="historical-match">Previous Instructor (${match.semester}): ${match.instructor}</div>`
-                                ).join('');
-                            }
-                        }
-
-                        let facultyCell = course.empName;
-                        if (course.empName === 'TBA') {
-                            facultyCell = `
-                                <div>TBA</div>
-                                ${historicalInfo}
-                            `;
-                        }
-
-                        row.innerHTML = `
-                            <td>${course.courseCode}-[${section}]</td>
-                            <td>${course.empShortName}</td>
-                            <td>${facultyCell}</td>
-                            <td>${(course.classSchedule || '').replace(/\n/g, '<br>')}</td>
-                            <td>${(course.examDate || '').replace(/\n/g, '<br>')}</td>
-                        `;
-
-                        tableBody.appendChild(row);
-                    });
-
-                    if (searchInput.value) {
-                        filterTable();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading data:', error);
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="5">
-                                <div class="error-message">
-                                    Error loading data. Please check your connection and try again.
-                                </div>
-                            </td>
-                        </tr>
-                    `;
+    // Check Summer 24
+    if (semesterData.summer) {
+        semesterData.summer.forEach(course => {
+            const summerTimes = extractTimeSlots(course.classSchedule);
+            if (compareTimeSlots(springTimes, summerTimes)) {
+                matches.push({
+                    semester: 'Summer-24',
+                    initial: course.empShortName
                 });
-        }
-
-        function filterTable() {
-            const filter = searchInput.value.toUpperCase();
-            const rows = tableBody.getElementsByTagName('tr');
-
-            for (let row of rows) {
-                const cells = row.getElementsByTagName('td');
-                let match = false;
-
-                if (cells[0].textContent.toUpperCase().includes(filter) ||
-                    cells[1].textContent.toUpperCase().includes(filter) ||
-                    cells[2].textContent.toUpperCase().includes(filter)) {
-                    match = true;
-                }
-
-                row.style.display = match ? '' : 'none';
             }
+        });
+    }
+
+    // Remove duplicates
+    const uniqueMatches = [];
+    const seen = new Set();
+    matches.forEach(m => {
+        const key = `${m.semester}-${m.initial}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            uniqueMatches.push(m);
         }
+    });
 
-        // Initial data loading
-        Promise.all([
-            fetch('old-usisdump.json').then(res => res.json()),
-            fetch('summer-usisdump.json').then(res => res.json()),
-            fetch('spring-usisdump.json').then(res => res.json())
-        ]).then(([fallData, summerData, springData]) => {
-            semesterData.fall = normalizeCourseData(fallData.data, 'old');
-            semesterData.summer = normalizeCourseData(summerData.data, 'old');
-            semesterData.spring = normalizeCourseData(springData, 'spring25');
+    return uniqueMatches;
+}
 
-            loadCourseData('old-usisdump.json', 'fall');
-        }).catch(error => {
-            console.error('Error loading initial data:', error);
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="5">
-                        <div class="error-message">
-                            Error loading initial data. Please check your connection and try again.
-                        </div>
-                    </td>
-                </tr>
-            `;
+// Update the faculty cell rendering
+processedData.forEach(course => {
+    // ... existing code ...
+    
+    let facultyBadges = '';
+    if (semester === 'spring') {
+        const timeMatches = findTimeMatches(course);
+        if (timeMatches.length > 0) {
+            facultyBadges = timeMatches.map(m => 
+                `<span class="time-badge">(${m.semester}: ${m.initial})</span>`
+            ).join(' ');
+        }
+    }
+
+    row.innerHTML = `
+        <td>${course.courseCode}-[${section}]</td>
+        <td>
+            ${course.empShortName}
+            ${facultyBadges}
+        </td>
+        <td>${facultyCell}</td>
+        <td>${(course.classSchedule || '').replace(/\n/g, '<br>')}</td>
+        <td>${(course.examDate || '').replace(/\n/g, '<br>')}</td>
+    `;
+
+    // ... rest of the code ...
+});
+
+// Add to your CSS
+.time-badge {
+    display: inline-block;
+    background-color: #e6f4ea;
+    color: #137333;
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    border: 1px solid #b7e1cd;
+}
+</script><script>
+// Modify the findTimeMatches function
+function findTimeMatches(springCourse) {
+    const matches = [];
+    const springTimes = extractTimeSlots(springCourse.classSchedule);
+
+    // Check Fall 24
+    if (semesterData.fall) {
+        semesterData.fall.forEach(course => {
+            const fallTimes = extractTimeSlots(course.classSchedule);
+            if (compareTimeSlots(springTimes, fallTimes)) {
+                matches.push({
+                    semester: 'Fall-24',
+                    initial: course.empShortName
+                });
+            }
         });
+    }
 
-        document.querySelectorAll('.semester-button').forEach(button => {
-            button.addEventListener('click', function() {
-                activeButton.classList.remove('active');
-                this.classList.add('active');
-                activeButton = this;
-
-                loadCourseData(this.dataset.file, this.dataset.semester);
-            });
+    // Check Summer 24
+    if (semesterData.summer) {
+        semesterData.summer.forEach(course => {
+            const summerTimes = extractTimeSlots(course.classSchedule);
+            if (compareTimeSlots(springTimes, summerTimes)) {
+                matches.push({
+                    semester: 'Summer-24',
+                    initial: course.empShortName
+                });
+            }
         });
+    }
 
-        searchInput.addEventListener('keyup', filterTable);
-    </script>
-</body>
-</html>
+    // Remove duplicates
+    const uniqueMatches = [];
+    const seen = new Set();
+    matches.forEach(m => {
+        const key = `${m.semester}-${m.initial}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            uniqueMatches.push(m);
+        }
+    });
+
+    return uniqueMatches;
+}
+
+// Update the faculty cell rendering
+processedData.forEach(course => {
+    // ... existing code ...
+    
+    let facultyBadges = '';
+    if (semester === 'spring') {
+        const timeMatches = findTimeMatches(course);
+        if (timeMatches.length > 0) {
+            facultyBadges = timeMatches.map(m => 
+                `<span class="time-badge">(${m.semester}: ${m.initial})</span>`
+            ).join(' ');
+        }
+    }
+
+    row.innerHTML = `
+        <td>${course.courseCode}-[${section}]</td>
+        <td>
+            ${course.empShortName}
+            ${facultyBadges}
+        </td>
+        <td>${facultyCell}</td>
+        <td>${(course.classSchedule || '').replace(/\n/g, '<br>')}</td>
+        <td>${(course.examDate || '').replace(/\n/g, '<br>')}</td>
+    `;
+
+    // ... rest of the code ...
+});
+
+// Add to your CSS
+.time-badge {
+    display: inline-block;
+    background-color: #e6f4ea;
+    color: #137333;
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    border: 1px solid #b7e1cd;
+}
+</script>
