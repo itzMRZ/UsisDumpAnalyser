@@ -1,86 +1,110 @@
 <script>
-// Modify the findTimeMatches function
-function findTimeMatches(springCourse) {
-    const matches = [];
-    const springTimes = extractTimeSlots(springCourse.classSchedule);
-
-    // Check Fall 24
-    if (semesterData.fall) {
-        semesterData.fall.forEach(course => {
-            const fallTimes = extractTimeSlots(course.classSchedule);
-            if (compareTimeSlots(springTimes, fallTimes)) {
-                matches.push({
-                    semester: 'Fall-24',
-                    initial: course.empShortName
-                });
-            }
-        });
-    }
-
-    // Check Summer 24
-    if (semesterData.summer) {
-        semesterData.summer.forEach(course => {
-            const summerTimes = extractTimeSlots(course.classSchedule);
-            if (compareTimeSlots(springTimes, summerTimes)) {
-                matches.push({
-                    semester: 'Summer-24',
-                    initial: course.empShortName
-                });
-            }
-        });
-    }
-
-    // Remove duplicates
-    const uniqueMatches = [];
-    const seen = new Set();
-    matches.forEach(m => {
-        const key = `${m.semester}-${m.initial}`;
-        if (!seen.has(key)) {
-            seen.add(key);
-            uniqueMatches.push(m);
-        }
-    });
-
-    return uniqueMatches;
+// Add these functions
+function extractTimeSlots(schedule) {
+    if (!schedule) return [];
+    return schedule.split('\n').map(entry => {
+        const match = entry.match(/(\w+?)\((\d+:\d+ [AP]M)/i);
+        return match ? {
+            day: match[1].toUpperCase(),
+            time: match[2]
+        } : null;
+    }).filter(Boolean);
 }
 
-// Update the faculty cell rendering
-processedData.forEach(course => {
-    // ... existing code ...
-    
-    let facultyBadges = '';
-    if (semester === 'spring') {
-        const timeMatches = findTimeMatches(course);
-        if (timeMatches.length > 0) {
-            facultyBadges = timeMatches.map(m => 
-                `<span class="time-badge">(${m.semester}: ${m.initial})</span>`
-            ).join(' ');
-        }
+function compareTimeSlots(current, previous) {
+    return current.some(c => 
+        previous.some(p => 
+            c.day === p.day && 
+            c.time === p.time
+        )
+    );
+}
+
+function findTimeMatches(springCourse) {
+    const matches = [];
+    const currentTimes = extractTimeSlots(springCourse.classSchedule);
+
+    // Check Fall 2024
+    if (semesterData.fall) {
+        const fallMatch = semesterData.fall.find(course => 
+            compareTimeSlots(currentTimes, extractTimeSlots(course.classSchedule))
+        );
+        if (fallMatch) matches.push(`Fall-24: ${fallMatch.empShortName}`);
     }
 
+    // Check Summer 2024
+    if (semesterData.summer) {
+        const summerMatch = semesterData.summer.find(course => 
+            compareTimeSlots(currentTimes, extractTimeSlots(course.classSchedule))
+        );
+        if (summerMatch) matches.push(`Summer-24: ${summerMatch.empShortName}`);
+    }
+
+    return matches;
+}
+
+// Update the normalizeCourseData function
+function normalizeCourseData(data, format) {
+    if (format === 'spring25') {
+        return data.map(course => ({
+            courseCode: course.courseCode,
+            courseDetails: `[${course.sectionName}]`,
+            empShortName: course.faculties || 'TBA',
+            empName: course.faculties || 'TBA',
+            classSchedule: course.preRegSchedule || '',
+            examDate: course.sectionSchedule ? 
+                `Mid: ${course.sectionSchedule.midExamDetail}<br>Final: ${course.sectionSchedule.finalExamDetail}` : 
+                'TBA'
+        }));
+    }
+    
+    // For old format (Fall/Summer)
+    return data.map(course => ({
+        courseCode: course.courseCode,
+        courseDetails: course.courseDetails,
+        empShortName: course.empShortName,
+        empName: course.empName,
+        classSchedule: course.classSchedule,
+        examDate: course.dayNo || 'TBA'
+    }));
+}
+
+// Update the row creation in loadCourseData
+processedData.forEach(course => {
+    const section = extractSection(course.courseDetails);
+    
+    // Time matches
+    let timeMatches = [];
+    if (semester === 'spring') {
+        timeMatches = findTimeMatches(course);
+    }
+
+    const row = document.createElement('tr');
     row.innerHTML = `
         <td>${course.courseCode}-[${section}]</td>
         <td>
             ${course.empShortName}
-            ${facultyBadges}
+            ${timeMatches.length > 0 ? 
+                `<span class="time-match">(${timeMatches.join(', ')})</span>` : 
+                ''}
         </td>
-        <td>${facultyCell}</td>
-        <td>${(course.classSchedule || '').replace(/\n/g, '<br>')}</td>
-        <td>${(course.examDate || '').replace(/\n/g, '<br>')}</td>
+        <td>${course.empName}</td>
+        <td>${course.classSchedule.replace(/\n/g, '<br>') || 'TBA'}</td>
+        <td>${course.examDate}</td>
     `;
 
-    // ... rest of the code ...
+    tableBody.appendChild(row);
 });
 
-// Add to your CSS
-.time-badge {
+// Add to CSS
+.time-match {
     display: inline-block;
-    background-color: #e6f4ea;
-    color: #137333;
+    background: #e6ffed;
+    color: #22863a;
     font-size: 0.8em;
     padding: 2px 6px;
     border-radius: 4px;
-    margin-left: 5px;
-    border: 1px solid #b7e1cd;
+    margin-left: 8px;
+    border: 1px solid #b3e6cb;
 }
 </script>
