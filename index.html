@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head >
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Information Portal</title>
+
     <style>
+        .section-match {
+        color: #155724;
+        background-color: #d4edda;
+        padding: 2px 4px;
+        border-radius: 4px;
+        margin-right: 4px;
+        font-weight: bold;
+    }
+    .time-match {
+        color: #004085;
+        background-color: #cce5ff;
+        padding: 2px 4px;
+        border-radius: 4px;
+    }
+        .data-status {
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+}
         /* All previous styles remain unchanged */
         body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f2f5; }
         .container { max-width: 1200px; margin: 0 auto; }
@@ -32,6 +53,7 @@
 </head>
 <body>
     <div class="container">
+        <div id="data-status" class="data-status"></div>
         <h1>Course Information Portal</h1>
         <div class="button-container">
             <button class="semester-button active" data-semester="fall" data-file="old-usisdump.json">Fall 2024</button>
@@ -66,7 +88,7 @@
         let activeButton = document.querySelector('.semester-button.active');
         const tableBody = document.getElementById('courseTable');
         const searchInput = document.getElementById('searchInput');
-        
+
         let currentPage = 1;
         const itemsPerPage = 50;
         let currentData = [];
@@ -77,6 +99,67 @@
             summer: null,
             spring: null
         };
+
+        async function loadSpringData() {
+    try {
+        const cdnResponse = await fetch('https://usis-cdn.eniamza.com/connect.json');
+        const statusDiv = document.getElementById('data-status');
+
+        if (!cdnResponse.ok) throw new Error('CDN fetch failed');
+        const cdnData = await cdnResponse.json();
+
+        // Update status for live data
+        statusDiv.innerHTML = '🟢 Live Data: Connected to CDN';
+        statusDiv.style.backgroundColor = '#d4edda';
+        statusDiv.style.color = '#155724';
+
+        return normalizeCourseData(cdnData, 'spring25');
+    } catch (cdnError) {
+        console.warn('Using fallback spring data:', cdnError.message);
+        const statusDiv = document.getElementById('data-status');
+
+        const fileResponse = await fetch('spring-usisdump.json');
+        if (!fileResponse.ok) throw new Error('Both CDN and file fetch failed');
+        const fileData = await fileResponse.json();
+
+        // Update status for offline data
+        statusDiv.innerHTML = '🔴 Offline Data: Loaded from Local File';
+        statusDiv.style.backgroundColor = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+
+        return normalizeCourseData(fileData, 'spring25');
+    }
+}
+
+// Modify the loadCourseData function to handle status for other semesters
+async function loadCourseData(semester, filename) {
+    try {
+        let data;
+        const statusDiv = document.getElementById('data-status');
+
+        if (semester === 'spring') {
+            data = await loadSpringData();
+        } else {
+            const response = await fetch(filename);
+            if (!response.ok) throw new Error(`Failed to load ${filename}`);
+            const rawData = await response.json();
+            data = normalizeCourseData(rawData.data || [], 'old');
+
+            // Update status for semester-specific data
+            statusDiv.innerHTML = `🟠 Local Data: ${semester.charAt(0).toUpperCase() + semester.slice(1)} 2024 Semester`;
+            statusDiv.style.backgroundColor = '#fff3cd';
+            statusDiv.style.color = '#856404';
+        }
+
+        semesterData[semester] = data;
+        currentData = data;
+        filteredData = [...data];
+        currentPage = 1;
+        updateDisplay();
+    } catch (error) {
+        handleError(error);
+    }
+}
 
         // Time conversion utilities
         function timeToMinutes(timeStr) {
@@ -104,7 +187,7 @@
                 section: format === 'spring25' ? course.sectionName : (course.courseDetails?.match(/\[(.*?)\]/) || [,''])[1],
                 faculty: format === 'spring25' ? (course.faculties || 'TBA') : (course.empName || 'TBA'),
                 schedule: getComparableSchedule(course, format),
-                examDate: format === 'spring25' 
+                examDate: format === 'spring25'
                     ? (course.sectionSchedule?.finalExamDetail || course.examDate || 'TBA')
                     : (course.examDate || course.dayNo || 'TBA'),
                 seats: format === 'spring25' ? {
@@ -134,83 +217,86 @@
         }
 
         // Enhanced matching logic
-        function findHistoricalMatches(currentCourse) {
-            const matches = {
-                exact: [],
-                sectionHistory: [],
-                timeMatches: []
-            };
+        function findMatches(springCourse) {
+    const matches = [];
 
-            ['fall', 'summer'].forEach(semester => {
-                if (!semesterData[semester]) return;
+    // Ensure we have data for previous semesters
+    ['fall', 'summer'].forEach(semester => {
+        if (!semesterData[semester]) return;
 
-                semesterData[semester].forEach(prevCourse => {
-                    if (prevCourse.code !== currentCourse.code) return;
+        // Find courses with same course code
+        const sameCourseCodeGroup = semesterData[semester].filter(
+            prevCourse => prevCourse.code === springCourse.code
+        );
 
-                    const isSameSection = prevCourse.section === currentCourse.section;
-                    const isSameTime = JSON.stringify(prevCourse.schedule) === JSON.stringify(currentCourse.schedule);
+        sameCourseCodeGroup.forEach(prevCourse => {
+            // Skip if it's the same section
+            if (prevCourse.section === springCourse.section) return;
 
-                    if (isSameSection && isSameTime) {
-                        matches.exact.push({...prevCourse, semester});
-                    } else if (isSameSection) {
-                        matches.sectionHistory.push({...prevCourse, semester});
-                    } else if (isSameTime) {
-                        matches.timeMatches.push({...prevCourse, semester});
-                    }
+            // More flexible time matching
+            const hasTimeOverlap = springCourse.schedule.some(springTime =>
+                prevCourse.schedule.some(prevTime =>
+                    // Check day match and time proximity
+                    springTime.day === prevTime.day &&
+                    Math.abs(springTime.start - prevTime.start) < 90 // Within 1.5 hours
+                )
+            );
+
+            // Only add if time overlaps and faculty is not 'TBA'
+            if (hasTimeOverlap && prevCourse.faculty !== 'TBA') {
+                matches.push({
+                    faculty: prevCourse.faculty,
+                    section: prevCourse.section,
+                    semester: semester,
+                    schedule: prevCourse.schedule
                 });
-            });
+            }
+        });
+    });
 
-            return matches;
-        }
+    return matches;
+}
 
         // Display functions
-        function buildFacultyInfo(matches) {
-            let html = '<div class="tba-info">TBA</div>';
+        function buildMatchInfo(matches) {
+    if (!matches.length) {
+        return `<div class="tba-info">TBA</div>`;
+    }
 
-            if (matches.exact.length > 0) {
-                html += `<div class="exact-match match-group">Exact matches: ${
-                    matches.exact.map(m => 
-                        `${m.faculty} <span class="semester-tag">${m.semester.toUpperCase()}-24</span>`
-                    ).join(', ')
-                }</div>`;
-            }
+    const uniqueFaculty = [];
+    const seenFaculty = new Set();
 
-            if (matches.sectionHistory.length > 0) {
-                html += `<div class="section-history match-group">Previous section faculty: ${
-                    matches.sectionHistory.map(m => 
-                        `${m.faculty} (${m.semester.toUpperCase()}-24 at ${
-                            m.schedule.map(s => `${s.day} ${formatTime(s.start)}`).join(', ')
-                        })`
-                    ).join(', ')
-                }</div>`;
-            }
-
-            if (matches.timeMatches.length > 0) {
-                html += `<div class="time-match match-group">Same time faculty: ${
-                    matches.timeMatches.map(m => 
-                        `${m.faculty} <span class="semester-tag">${m.semester.toUpperCase()}-24 Sec ${m.section}</span>`
-                    ).join(', ')
-                }</div>`;
-            }
-
-            return html;
+    matches.forEach(match => {
+        if (!seenFaculty.has(match.faculty)) {
+            uniqueFaculty.push(match);
+            seenFaculty.add(match.faculty);
         }
+    });
+
+    let html = `<div class="tba-info">TBA (Potential Faculty)</div>`;
+
+    html += `
+        <div class="semester-group">
+            <div class="time-match">
+                Potential Faculty:
+                ${uniqueFaculty.map(match => `
+                    <div>
+                        <span class="section-match">${match.semester.toUpperCase()} 2024 Section</span>:
+                        ${match.faculty}
+                        (<span class="time-match">Section ${match.section},
+                        ${match.schedule.map(s =>
+                            `${s.day} ${formatTime(s.start)}`
+                        ).join(', ')}</span>)
+                    </div>
+                `).join('')}
+            </div>
+        </div>`;
+
+    return html;
+}
 
         // Data loading with CDN fallback
-        async function loadSpringData() {
-            try {
-                const cdnResponse = await fetch('https://usis-cdn.eniamza.com/connect.json');
-                if (!cdnResponse.ok) throw new Error('CDN fetch failed');
-                const cdnData = await cdnResponse.json();
-                return normalizeCourseData(cdnData, 'spring25');
-            } catch (cdnError) {
-                console.warn('Using fallback spring data:', cdnError.message);
-                const fileResponse = await fetch('spring-usisdump.json');
-                if (!fileResponse.ok) throw new Error('Both CDN and file fetch failed');
-                const fileData = await fileResponse.json();
-                return normalizeCourseData(fileData, 'spring25');
-            }
-        }
+
 
         async function loadCourseData(semester, filename) {
             try {
@@ -243,39 +329,41 @@
         }
 
         function renderTable(courses) {
-            tableBody.innerHTML = '';
-            
-            courses.forEach(course => {
-                const row = document.createElement('tr');
-                let facultyInfo = course.faculty;
-                let seatStatus = 'N/A';
+    tableBody.innerHTML = '';
 
-                if (course.seats) {
-                    seatStatus = course.seats.available > 0 
-                        ? `<span class="seats-available">${course.seats.available}/${course.seats.capacity}</span>`
-                        : `<span class="seats-full">FULL (${course.seats.waitlist} waitlist)</span>`;
+    courses.forEach(course => {
+        const row = document.createElement('tr');
+        let facultyInfo = course.faculty;
+        let seatStatus = 'N/A';
 
-                    if (course.faculty === 'TBA') {
-                        const matches = findHistoricalMatches(course);
-                        facultyInfo = buildFacultyInfo(matches);
-                    }
-                }
-
-                row.innerHTML = `
-                    <td>${course.code}</td>
-                    <td>${course.section}</td>
-                    <td>${course.faculty.split(' ').pop()}</td>
-                    <td>${facultyInfo}</td>
-                    <td>${course.schedule.map(s => 
-                        `${s.day} ${formatTime(s.start)}`).join('<br>')}
-                    </td>
-                    <td>${seatStatus}</td>
-                    <td>${course.examDate}</td>
-                `;
-
-                tableBody.appendChild(row);
-            });
+        // Handle seat status
+        if (course.seats) {
+            seatStatus = course.seats.available > 0
+                ? `<span class="seats-available">${course.seats.available}/${course.seats.capacity}</span>`
+                : `<span class="seats-full">FULL (${course.seats.waitlist} waitlist)</span>`;
         }
+
+        // Enhanced TBA faculty handling
+        if (course.faculty === 'TBA') {
+            const matches = findMatches(course);
+            facultyInfo = buildMatchInfo(matches);
+        }
+
+        row.innerHTML = `
+            <td>${course.code}</td>
+            <td>${course.section}</td>
+            <td>${course.faculty !== 'TBA' ? course.faculty.split(' ').pop() : 'TBA'}</td>
+            <td>${facultyInfo}</td>
+            <td>${course.schedule.map(s =>
+                `${s.day} ${formatTime(s.start)}`).join('<br>')}
+            </td>
+            <td>${seatStatus}</td>
+            <td>${course.examDate}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
 
         // Pagination and utilities
         function updatePagination() {
@@ -299,16 +387,29 @@
         }
 
         function filterTable() {
-            const filter = searchInput.value.toUpperCase();
-            filteredData = currentData.filter(course => 
-                course.code.toUpperCase().includes(filter) ||
-                course.section.toUpperCase().includes(filter) ||
-                course.faculty.toUpperCase().includes(filter)
-            );
-            currentPage = 1;
-            updateDisplay();
-        }
+    const filter = searchInput.value.trim().toUpperCase();
 
+    // More comprehensive search across multiple fields
+    filteredData = currentData.filter(course => {
+        // Check if any part of the search matches
+        const matchCode = course.code.toUpperCase().includes(filter);
+        const matchSection = course.section.toUpperCase().includes(filter);
+        const matchFaculty = course.faculty.toUpperCase().includes(filter);
+        const matchSchedule = course.schedule.some(schedule =>
+            `${schedule.day} ${formatTime(schedule.start)}`.toUpperCase().includes(filter)
+        );
+
+        return matchCode || matchSection || matchFaculty || matchSchedule;
+    });
+
+    // Reset to first page after filtering
+    currentPage = 1;
+    updateDisplay();
+
+    // Update pagination info
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+}
         // Initialization
         Promise.all([
             fetch('old-usisdump.json').then(r => r.json()).then(data => {
