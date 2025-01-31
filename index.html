@@ -5,143 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Information Portal</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f2f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .button-container {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .semester-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .semester-button.active {
-            background-color: #0056b3;
-        }
-
-        .semester-button:hover {
-            background-color: #0056b3;
-        }
-
-        .search-container {
-            margin-bottom: 20px;
-        }
-
-        #searchInput {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .tba-info {
-            color: #721c24;
-            background-color: #f8d7da;
-            padding: 8px;
-            margin-top: 4px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .historical-match {
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-top: 4px;
-            font-size: 0.85em;
-        }
-
-        .full-match {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .section-match {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .time-match {
-            background-color: #e6f4ea;
-            color: #137333;
-            border: 1px solid #b7e1cd;
-        }
-
-        .error-message {
-            color: #721c24;
-            background-color: #f8d7da;
-            padding: 12px;
-            border-radius: 4px;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .section-name {
-            color: #666;
-            font-size: 0.9em;
-            font-style: italic;
-            display: block;
-            margin-top: 4px;
-        }
+        /* All previous styles remain unchanged */
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f2f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .button-container { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .semester-button { padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; transition: background-color 0.3s; }
+        .semester-button.active { background-color: #0056b3; }
+        .semester-button:hover { background-color: #0056b3; }
+        .search-container { margin-bottom: 20px; }
+        #searchInput { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        tr:hover { background-color: #f5f5f5; }
+        .tba-info { color: #721c24; background-color: #f8d7da; padding: 8px; border-radius: 4px; }
+        .match-group { margin: 10px 0; }
+        .exact-match { color: #155724; background-color: #d4edda; padding: 4px; border-radius: 4px; }
+        .section-history { color: #856404; background-color: #fff3cd; padding: 4px; border-radius: 4px; }
+        .time-match { color: #004085; background-color: #cce5ff; padding: 4px; border-radius: 4px; }
+        .semester-tag { font-size: 0.8em; color: #666; margin-left: 8px; }
+        .pagination { margin: 20px 0; display: flex; gap: 10px; justify-content: center; }
+        .seats-available { color: #155724; background-color: #d4edda; padding: 4px 8px; border-radius: 4px; }
+        .seats-full { color: #721c24; background-color: #f8d7da; padding: 4px 8px; border-radius: 4px; }
+        .error-message { color: #721c24; background-color: #f8d7da; padding: 12px; border-radius: 4px; margin: 10px 0; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Course Information Portal</h1>
-
         <div class="button-container">
             <button class="semester-button active" data-semester="fall" data-file="old-usisdump.json">Fall 2024</button>
             <button class="semester-button" data-semester="summer" data-file="summer-usisdump.json">Summer 2024</button>
-            <button class="semester-button" data-semester="spring" data-file="spring-usisdump.json">Spring 2025</button>
+            <button class="semester-button" data-semester="spring">Spring 2025</button>
         </div>
-
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search by Course Code, Faculty, or Name...">
         </div>
-
+        <div class="pagination">
+            <button id="prevPage">Previous</button>
+            <span id="pageInfo">Page 1 of 1</span>
+            <button id="nextPage">Next</button>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -150,11 +54,11 @@
                     <th>Faculty Initial</th>
                     <th>Full Name</th>
                     <th>Class Schedule</th>
+                    <th>Seats</th>
                     <th>Exam Time</th>
                 </tr>
             </thead>
-            <tbody id="courseTable">
-            </tbody>
+            <tbody id="courseTable"></tbody>
         </table>
     </div>
 
@@ -163,241 +67,294 @@
         const tableBody = document.getElementById('courseTable');
         const searchInput = document.getElementById('searchInput');
         
+        let currentPage = 1;
+        const itemsPerPage = 50;
+        let currentData = [];
+        let filteredData = [];
+
         const semesterData = {
             fall: null,
             summer: null,
             spring: null
         };
 
-        function normalizeCourseData(data, format) {
-            if (format === 'spring25') {
-                return data.map(course => ({
-                    courseCode: course.courseCode,
-                    sectionNumber: course.sectionName,
-                    sectionName: course.sectionName,
-                    empShortName: course.faculties || 'TBA',
-                    empName: course.faculties || 'TBA',
-                    classSchedule: course.preRegSchedule || '',
-                    examDate: course.sectionSchedule ? 
-                        `Mid: ${course.sectionSchedule.midExamDetail}<br>Final: ${course.sectionSchedule.finalExamDetail}` : 
-                        'TBA',
-                    rawSchedule: course.sectionSchedule?.classSchedules || []
-                }));
-            } else {
-                return data.map(course => ({
-                    courseCode: course.courseCode,
-                    sectionNumber: (course.courseDetails.match(/\[(.*?)\]/) || [,''])[1],
-                    sectionName: (course.courseDetails.match(/\((.*?)\)/) || [,''])[1],
-                    empShortName: course.empShortName,
-                    empName: course.empName,
-                    classSchedule: course.classSchedule,
-                    examDate: course.dayNo || 'TBA',
-                    rawSchedule: course.classSchedule ? course.classSchedule.split('\n') : []
-                }));
-            }
+        // Time conversion utilities
+        function timeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const [timePart, period] = timeStr.split(/(?=[AP]M)/i);
+            const [hours, minutes] = timePart.split(':').map(Number);
+            let total = hours * 60 + minutes;
+            if (period?.toUpperCase() === 'PM' && hours < 12) total += 720;
+            if (period?.toUpperCase() === 'AM' && hours === 12) total -= 720;
+            return total;
         }
 
-        function parseSchedule(schedule) {
-            return schedule.map(entry => {
+        function formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            return `${displayHours}:${mins.toString().padStart(2, '0')} ${period}`;
+        }
+
+        // Data normalization
+        function normalizeCourseData(data, format) {
+            return data.map(course => ({
+                code: course.courseCode,
+                section: format === 'spring25' ? course.sectionName : (course.courseDetails?.match(/\[(.*?)\]/) || [,''])[1],
+                faculty: format === 'spring25' ? (course.faculties || 'TBA') : (course.empName || 'TBA'),
+                schedule: getComparableSchedule(course, format),
+                examDate: format === 'spring25' 
+                    ? (course.sectionSchedule?.finalExamDetail || course.examDate || 'TBA')
+                    : (course.examDate || course.dayNo || 'TBA'),
+                seats: format === 'spring25' ? {
+                    available: course.availableSeats || 0,
+                    capacity: course.seatCapacity || 0,
+                    waitlist: course.waitlistSeats || 0
+                } : null
+            }));
+        }
+
+        function getComparableSchedule(course, format) {
+            if (format === 'spring25') {
+                return (course.sectionSchedule?.classSchedules || []).map(s => ({
+                    day: s.day.substring(0, 3).toUpperCase(),
+                    start: timeToMinutes(s.startTime),
+                    end: timeToMinutes(s.endTime)
+                }));
+            }
+            return (course.classSchedule?.split('\n') || []).map(entry => {
                 const match = entry.match(/(\w+?)\((\d+:\d+ [AP]M)/i);
                 return match ? {
-                    day: match[1].toUpperCase(),
-                    time: match[2].replace(/^0/, '')
+                    day: match[1].substring(0, 3).toUpperCase(),
+                    start: timeToMinutes(match[2]),
+                    end: null
                 } : null;
             }).filter(Boolean);
         }
 
+        // Enhanced matching logic
         function findHistoricalMatches(currentCourse) {
             const matches = {
-                fullMatches: [],
-                sectionMatches: [],
+                exact: [],
+                sectionHistory: [],
                 timeMatches: []
             };
-            const currentSection = currentCourse.sectionNumber;
-            const currentSlots = parseSchedule(currentCourse.rawSchedule);
 
             ['fall', 'summer'].forEach(semester => {
-                if (semesterData[semester]) {
-                    semesterData[semester].forEach(course => {
-                        const historicalSlots = parseSchedule(course.rawSchedule);
-                        
-                        // Check for section match
-                        if (course.sectionNumber === currentSection) {
-                            // Check for time match within same section
-                            const timeMatch = currentSlots.some(cSlot => 
-                                historicalSlots.some(hSlot => 
-                                    cSlot.day === hSlot.day && 
-                                    cSlot.time === hSlot.time
-                                )
-                            );
-                            
-                            if (timeMatch) {
-                                matches.fullMatches.push({
-                                    semester: semester === 'fall' ? 'Fall-24' : 'Summer-24',
-                                    instructor: course.empName
-                                });
-                            } else {
-                                matches.sectionMatches.push({
-                                    semester: semester === 'fall' ? 'Fall-24' : 'Summer-24',
-                                    instructor: course.empName
-                                });
-                            }
-                        }
-                        // Check for time match regardless of section
-                        else {
-                            const timeMatch = currentSlots.some(cSlot => 
-                                historicalSlots.some(hSlot => 
-                                    cSlot.day === hSlot.day && 
-                                    cSlot.time === hSlot.time
-                                )
-                            );
-                            
-                            if (timeMatch) {
-                                matches.timeMatches.push({
-                                    semester: semester === 'fall' ? 'Fall-24' : 'Summer-24',
-                                    instructor: course.empName,
-                                    section: course.sectionNumber
-                                });
-                            }
-                        }
-                    });
-                }
+                if (!semesterData[semester]) return;
+
+                semesterData[semester].forEach(prevCourse => {
+                    if (prevCourse.code !== currentCourse.code) return;
+
+                    const isSameSection = prevCourse.section === currentCourse.section;
+                    const isSameTime = JSON.stringify(prevCourse.schedule) === JSON.stringify(currentCourse.schedule);
+
+                    if (isSameSection && isSameTime) {
+                        matches.exact.push({...prevCourse, semester});
+                    } else if (isSameSection) {
+                        matches.sectionHistory.push({...prevCourse, semester});
+                    } else if (isSameTime) {
+                        matches.timeMatches.push({...prevCourse, semester});
+                    }
+                });
             });
 
             return matches;
         }
 
-        function loadCourseData(filename, semester) {
-            tableBody.innerHTML = '';
-            
-            fetch(filename)
-                .then(response => response.json())
-                .then(rawData => {
-                    const isSpring = semester === 'spring';
-                    const dataArray = isSpring ? rawData : rawData.data;
-                    const processedData = normalizeCourseData(dataArray, isSpring ? 'spring25' : 'old');
-                    semesterData[semester] = processedData;
+        // Display functions
+        function buildFacultyInfo(matches) {
+            let html = '<div class="tba-info">TBA</div>';
 
-                    processedData.forEach(course => {
-                        const row = document.createElement('tr');
-                        
-                        let historicalInfo = '';
-                        if (isSpring && course.empName === 'TBA') {
-                            const matches = findHistoricalMatches(course);
-                            
-                            // Format matches
-                            const fullMatchesHtml = matches.fullMatches.map(match => `
-                                <div class="historical-match full-match">
-                                    ${match.semester}: ${match.instructor} (Same Section & Time)
-                                </div>
-                            `).join('');
+            if (matches.exact.length > 0) {
+                html += `<div class="exact-match match-group">Exact matches: ${
+                    matches.exact.map(m => 
+                        `${m.faculty} <span class="semester-tag">${m.semester.toUpperCase()}-24</span>`
+                    ).join(', ')
+                }</div>`;
+            }
 
-                            const sectionMatchesHtml = matches.sectionMatches.map(match => `
-                                <div class="historical-match section-match">
-                                    ${match.semester}: ${match.instructor} (Same Section)
-                                </div>
-                            `).join('');
+            if (matches.sectionHistory.length > 0) {
+                html += `<div class="section-history match-group">Previous section faculty: ${
+                    matches.sectionHistory.map(m => 
+                        `${m.faculty} (${m.semester.toUpperCase()}-24 at ${
+                            m.schedule.map(s => `${s.day} ${formatTime(s.start)}`).join(', ')
+                        })`
+                    ).join(', ')
+                }</div>`;
+            }
 
-                            const timeMatchesHtml = matches.timeMatches.map(match => `
-                                <div class="historical-match time-match">
-                                    ${match.semester}: ${match.instructor} (Same Time, Section ${match.section})
-                                </div>
-                            `).join('');
+            if (matches.timeMatches.length > 0) {
+                html += `<div class="time-match match-group">Same time faculty: ${
+                    matches.timeMatches.map(m => 
+                        `${m.faculty} <span class="semester-tag">${m.semester.toUpperCase()}-24 Sec ${m.section}</span>`
+                    ).join(', ')
+                }</div>`;
+            }
 
-                            historicalInfo = fullMatchesHtml + sectionMatchesHtml + timeMatchesHtml;
-                        }
-
-                        let facultyCell = course.empName;
-                        if (course.empName === 'TBA') {
-                            facultyCell = `
-                                <div class="tba-info">TBA</div>
-                                ${historicalInfo}
-                            `;
-                        }
-
-                        row.innerHTML = `
-                            <td>${course.courseCode}</td>
-                            <td>
-                                ${course.sectionNumber}
-                                <span class="section-name">(${course.sectionName || 'N/A'})</span>
-                            </td>
-                            <td>${course.empShortName}</td>
-                            <td>${facultyCell}</td>
-                            <td>${(course.classSchedule || '').replace(/\n/g, '<br>')}</td>
-                            <td>${course.examDate}</td>
-                        `;
-
-                        tableBody.appendChild(row);
-                    });
-
-                    if (searchInput.value) filterTable();
-                })
-                .catch(error => {
-                    console.error('Error loading data:', error);
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6">
-                                <div class="error-message">
-                                    Error loading data. Please check your connection and try again.
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
+            return html;
         }
 
-        function filterTable() {
-            const filter = searchInput.value.toUpperCase();
-            const rows = tableBody.getElementsByTagName('tr');
-
-            for (let row of rows) {
-                const cells = row.getElementsByTagName('td');
-                let match = false;
-                
-                for (let cell of cells) {
-                    if (cell.textContent.toUpperCase().includes(filter)) {
-                        match = true;
-                        break;
-                    }
-                }
-
-                row.style.display = match ? '' : 'none';
+        // Data loading with CDN fallback
+        async function loadSpringData() {
+            try {
+                const cdnResponse = await fetch('https://usis-cdn.eniamza.com/connect.json');
+                if (!cdnResponse.ok) throw new Error('CDN fetch failed');
+                const cdnData = await cdnResponse.json();
+                return normalizeCourseData(cdnData, 'spring25');
+            } catch (cdnError) {
+                console.warn('Using fallback spring data:', cdnError.message);
+                const fileResponse = await fetch('spring-usisdump.json');
+                if (!fileResponse.ok) throw new Error('Both CDN and file fetch failed');
+                const fileData = await fileResponse.json();
+                return normalizeCourseData(fileData, 'spring25');
             }
         }
 
-        // Initial data loading
-        Promise.all([
-            fetch('old-usisdump.json').then(res => res.json()),
-            fetch('summer-usisdump.json').then(res => res.json()),
-            fetch('spring-usisdump.json').then(res => res.json())
-        ]).then(([fallData, summerData, springData]) => {
-            semesterData.fall = normalizeCourseData(fallData.data, 'old');
-            semesterData.summer = normalizeCourseData(summerData.data, 'old');
-            semesterData.spring = normalizeCourseData(springData, 'spring25');
-            loadCourseData('old-usisdump.json', 'fall');
-        }).catch(error => {
-            console.error('Error loading initial data:', error);
+        async function loadCourseData(semester, filename) {
+            try {
+                let data;
+                if (semester === 'spring') {
+                    data = await loadSpringData();
+                } else {
+                    const response = await fetch(filename);
+                    if (!response.ok) throw new Error(`Failed to load ${filename}`);
+                    const rawData = await response.json();
+                    data = normalizeCourseData(rawData.data || [], 'old');
+                }
+
+                semesterData[semester] = data;
+                currentData = data;
+                filteredData = [...data];
+                currentPage = 1;
+                updateDisplay();
+            } catch (error) {
+                handleError(error);
+            }
+        }
+
+        function updateDisplay() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
+            renderTable(pageData);
+            updatePagination();
+        }
+
+        function renderTable(courses) {
+            tableBody.innerHTML = '';
+            
+            courses.forEach(course => {
+                const row = document.createElement('tr');
+                let facultyInfo = course.faculty;
+                let seatStatus = 'N/A';
+
+                if (course.seats) {
+                    seatStatus = course.seats.available > 0 
+                        ? `<span class="seats-available">${course.seats.available}/${course.seats.capacity}</span>`
+                        : `<span class="seats-full">FULL (${course.seats.waitlist} waitlist)</span>`;
+
+                    if (course.faculty === 'TBA') {
+                        const matches = findHistoricalMatches(course);
+                        facultyInfo = buildFacultyInfo(matches);
+                    }
+                }
+
+                row.innerHTML = `
+                    <td>${course.code}</td>
+                    <td>${course.section}</td>
+                    <td>${course.faculty.split(' ').pop()}</td>
+                    <td>${facultyInfo}</td>
+                    <td>${course.schedule.map(s => 
+                        `${s.day} ${formatTime(s.start)}`).join('<br>')}
+                    </td>
+                    <td>${seatStatus}</td>
+                    <td>${course.examDate}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Pagination and utilities
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
+        }
+
+        function handleError(error) {
+            console.error('Error:', error);
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6">
+                    <td colspan="7">
                         <div class="error-message">
-                            Error loading initial data. Please check your connection and try again.
+                            ${error.message}
                         </div>
                     </td>
                 </tr>
             `;
-        });
+        }
 
+        function filterTable() {
+            const filter = searchInput.value.toUpperCase();
+            filteredData = currentData.filter(course => 
+                course.code.toUpperCase().includes(filter) ||
+                course.section.toUpperCase().includes(filter) ||
+                course.faculty.toUpperCase().includes(filter)
+            );
+            currentPage = 1;
+            updateDisplay();
+        }
+
+        // Initialization
+        Promise.all([
+            fetch('old-usisdump.json').then(r => r.json()).then(data => {
+                semesterData.fall = normalizeCourseData(data.data || [], 'old');
+            }),
+            fetch('summer-usisdump.json').then(r => r.json()).then(data => {
+                semesterData.summer = normalizeCourseData(data.data || [], 'old');
+            }),
+            loadSpringData().then(data => {
+                semesterData.spring = data;
+            })
+        ]).then(() => {
+            loadCourseData('fall', 'old-usisdump.json');
+        }).catch(handleError);
+
+        // Event listeners
         document.querySelectorAll('.semester-button').forEach(button => {
             button.addEventListener('click', function() {
                 activeButton.classList.remove('active');
                 this.classList.add('active');
                 activeButton = this;
-                loadCourseData(this.dataset.file, this.dataset.semester);
+                searchInput.value = '';
+                const semester = this.dataset.semester;
+                if (semester === 'spring') {
+                    loadCourseData(semester);
+                } else {
+                    loadCourseData(semester, this.dataset.file);
+                }
             });
         });
 
-        searchInput.addEventListener('keyup', filterTable);
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage * itemsPerPage < filteredData.length) {
+                currentPage++;
+                updateDisplay();
+            }
+        });
+
+        searchInput.addEventListener('input', filterTable);
     </script>
 </body>
 </html>
