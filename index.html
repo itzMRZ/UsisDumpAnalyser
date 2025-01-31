@@ -17,6 +17,13 @@
         th {
             min-width: 120px;
         }
+        th:nth-child(4), /* Full Name column */
+        td:nth-child(4) {
+        min-width: 200px; /* Increased width for better readability */
+        width: 200px;
+        }
+
+
         .section-match {
         color: #155724;
         background-color: #d4edda;
@@ -187,6 +194,16 @@ async function loadCourseData(semester, filename) {
             return total;
         }
 
+        function debugSeatsData(course, format) {
+    if (format === 'spring25') {
+        console.log('Processing seats for course:', course.courseCode, {
+            capacity: course.capacity,
+            consumedSeat: course.consumedSeat,
+            available: (course.capacity || 0) - (course.consumedSeat || 0)
+        });
+    }
+}
+
         function formatTime(minutes) {
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
@@ -197,22 +214,30 @@ async function loadCourseData(semester, filename) {
 
         // Data normalization
         function normalizeCourseData(data, format) {
-            return data.map(course => ({
-                code: course.courseCode,
-                section: format === 'spring25' ? course.sectionName : (course.courseDetails?.match(/\[(.*?)\]/) || [,''])[1],
-                faculty: format === 'spring25' ? (course.faculties || 'TBA') : (course.empName || 'TBA'),
-                schedule: getComparableSchedule(course, format),
-                examDate: format === 'spring25'
-                    ? (course.sectionSchedule?.finalExamDetail || course.examDate || 'TBA')
-                    : (course.examDate || course.dayNo || 'TBA'),
-                seats: format === 'spring25' ? {
-                    available: course.availableSeats || 0,
-                    booked: (course.seatCapacity || 0) - (course.availableSeats || 0),
-                    capacity: course.seatCapacity || 0,
-                    waitlist: course.waitlistSeats || 0
-                } : null
-            }));
+    return data.map(course => {
+        // Add debugging
+        if (format === 'spring25') {
+            debugSeatsData(course, format);
         }
+
+        return {
+            code: course.courseCode,
+            section: format === 'spring25' ? course.sectionName : (course.courseDetails?.match(/\[(.*?)\]/) || [,''])[1],
+            faculty: format === 'spring25' ? (course.faculties || 'TBA') : (course.empName || 'TBA'),
+            facultyInitial: format === 'spring25' ? (course.faculties || 'TBA') : (course.empShortName || 'TBA'),
+            schedule: getComparableSchedule(course, format),
+            examDate: format === 'spring25'
+                ? (course.sectionSchedule?.finalExamDetail || course.examDate || 'TBA')
+                : (course.examDate || course.dayNo || 'TBA'),
+            seats: format === 'spring25' ? {
+                available: parseInt(course.capacity || 0) - parseInt(course.consumedSeat || 0),
+                booked: parseInt(course.consumedSeat || 0),
+                capacity: parseInt(course.capacity || 0),
+                waitlist: parseInt(course.waitlistSeats || 0)
+            } : null
+        };
+    });
+}
 
         function getComparableSchedule(course, format) {
             if (format === 'spring25') {
@@ -356,44 +381,44 @@ async function loadCourseData(semester, filename) {
             updatePagination();
         }
 
-        function renderTable(courses) {
-            tableBody.innerHTML = '';
+    function renderTable(courses) {
+    tableBody.innerHTML = '';
 
-            courses.forEach(course => {
-                const row = document.createElement('tr');
-                let facultyInfo = course.faculty;
-                let seatInfo = ['N/A', 'N/A', 'N/A'];
+    courses.forEach(course => {
+        const row = document.createElement('tr');
+        let facultyInfo = course.faculty;
+        let seatInfo = ['N/A', 'N/A', 'N/A'];
 
-                if (course.seats) {
-                    seatInfo = [
-                        `<span class="seats-available">${course.seats.available}</span>`,
-                        `<span class="seats-full">${course.seats.booked}</span>`,
-                        `<span>${course.seats.capacity}</span>`
-                    ];
-                }
-
-                if (course.faculty === 'TBA') {
-                    const matches = findMatches(course);
-                    facultyInfo = buildMatchInfo(matches);
-                }
-
-                row.innerHTML = `
-                    <td>${course.code}</td>
-                    <td>${course.section}</td>
-                    <td>${course.faculty !== 'TBA' ? course.faculty.split(' ').pop() : 'TBA'}</td>
-                    <td>${facultyInfo}</td>
-                    <td>${course.schedule.map(s =>
-                        `${s.day} ${formatTime(s.start)}`).join('<br>')}
-                    </td>
-                    <td>${seatInfo[0]}</td>
-                    <td>${seatInfo[1]}</td>
-                    <td>${seatInfo[2]}</td>
-                    <td>${course.examDate}</td>
-                `;
-
-                tableBody.appendChild(row);
-            });
+        if (course.seats && typeof course.seats.available === 'number') {
+            seatInfo = [
+                `<span class="seats-available">${course.seats.available}</span>`,
+                `<span class="seats-full">${course.seats.booked}</span>`,
+                `<span>${course.seats.capacity}</span>`
+            ];
         }
+
+        if (course.faculty === 'TBA') {
+            const matches = findMatches(course);
+            facultyInfo = buildMatchInfo(matches);
+        }
+
+        row.innerHTML = `
+            <td>${course.code}</td>
+            <td>${course.section}</td>
+            <td>${course.faculty !== 'TBA' ? course.facultyInitial : 'TBA'}</td>
+            <td>${facultyInfo}</td>
+            <td>${course.schedule.map(s =>
+                `${s.day} ${formatTime(s.start)}`).join('<br>')}
+            </td>
+            <td>${seatInfo[0]}</td>
+            <td>${seatInfo[1]}</td>
+            <td>${seatInfo[2]}</td>
+            <td>${course.examDate}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
 
         // Pagination and utilities
         function updatePagination() {
