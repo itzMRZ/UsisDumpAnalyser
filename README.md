@@ -1,2 +1,5 @@
 # UsisDumpAnalyser
-This will analyse Usis dumps and try to guess TBA faculty
+This will analyze Usis dumps and try to guess TBA faculty
+
+
+Use it from here - https://usis-dump-analyser.vercel.app/
