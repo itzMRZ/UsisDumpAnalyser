@@ -6,6 +6,17 @@
     <title>Course Information Portal</title>
 
     <style>
+        .section-history-match {
+            color: #4a148c;
+            background-color: #e8dafc;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+        /* Update table header CSS */
+        th {
+            min-width: 120px;
+        }
         .section-match {
         color: #155724;
         background-color: #d4edda;
@@ -76,10 +87,14 @@
                     <th>Faculty Initial</th>
                     <th>Full Name</th>
                     <th>Class Schedule</th>
-                    <th>Seats</th>
+                    <th>Available</th>
+                    <th>Booked</th>
+                    <th>Capacity</th>
                     <th>Exam Time</th>
                 </tr>
             </thead>
+            <tbody id="courseTable"></tbody>
+        </table>
             <tbody id="courseTable"></tbody>
         </table>
     </div>
@@ -192,6 +207,7 @@ async function loadCourseData(semester, filename) {
                     : (course.examDate || course.dayNo || 'TBA'),
                 seats: format === 'spring25' ? {
                     available: course.availableSeats || 0,
+                    booked: (course.seatCapacity || 0) - (course.availableSeats || 0),
                     capacity: course.seatCapacity || 0,
                     waitlist: course.waitlistSeats || 0
                 } : null
@@ -218,82 +234,94 @@ async function loadCourseData(semester, filename) {
 
         // Enhanced matching logic
         function findMatches(springCourse) {
-    const matches = [];
+            const matches = {
+                timeMatches: [],
+                sectionHistory: []
+            };
 
-    // Ensure we have data for previous semesters
-    ['fall', 'summer'].forEach(semester => {
-        if (!semesterData[semester]) return;
+            ['fall', 'summer'].forEach(semester => {
+                if (!semesterData[semester]) return;
 
-        // Find courses with same course code
-        const sameCourseCodeGroup = semesterData[semester].filter(
-            prevCourse => prevCourse.code === springCourse.code
-        );
+                semesterData[semester].forEach(prevCourse => {
+                    // Section history match (same course + same section)
+                    if (prevCourse.code === springCourse.code && prevCourse.section === springCourse.section) {
+                        matches.sectionHistory.push({
+                            faculty: prevCourse.faculty,
+                            semester: semester,
+                            schedule: prevCourse.schedule
+                        });
+                    }
 
-        sameCourseCodeGroup.forEach(prevCourse => {
-            // Skip if it's the same section
-            if (prevCourse.section === springCourse.section) return;
+                    // Time match logic (existing implementation)
+                    const hasTimeOverlap = springCourse.schedule.some(springTime =>
+                        prevCourse.schedule.some(prevTime =>
+                            springTime.day === prevTime.day &&
+                            Math.abs(springTime.start - prevTime.start) < 90
+                        )
+                    );
 
-            // More flexible time matching
-            const hasTimeOverlap = springCourse.schedule.some(springTime =>
-                prevCourse.schedule.some(prevTime =>
-                    // Check day match and time proximity
-                    springTime.day === prevTime.day &&
-                    Math.abs(springTime.start - prevTime.start) < 90 // Within 1.5 hours
-                )
-            );
-
-            // Only add if time overlaps and faculty is not 'TBA'
-            if (hasTimeOverlap && prevCourse.faculty !== 'TBA') {
-                matches.push({
-                    faculty: prevCourse.faculty,
-                    section: prevCourse.section,
-                    semester: semester,
-                    schedule: prevCourse.schedule
+                    if (hasTimeOverlap && prevCourse.faculty !== 'TBA' && prevCourse.code === springCourse.code) {
+                        matches.timeMatches.push({
+                            faculty: prevCourse.faculty,
+                            section: prevCourse.section,
+                            semester: semester,
+                            schedule: prevCourse.schedule
+                        });
+                    }
                 });
-            }
-        });
-    });
+            });
 
-    return matches;
-}
+            return matches;
+        }
 
         // Display functions
         function buildMatchInfo(matches) {
-    if (!matches.length) {
-        return `<div class="tba-info">TBA</div>`;
-    }
+            let html = `<div class="tba-info">TBA (Potential Faculty)</div>`;
 
-    const uniqueFaculty = [];
-    const seenFaculty = new Set();
+            // Section history matches
+            if (matches.sectionHistory.length > 0) {
+                html += `
+                    <div class="semester-group">
+                        <div class="section-history-match">
+                            Previous Section Faculty:
+                            ${matches.sectionHistory.map(m => `
+                                <div>
+                                    ${m.faculty}
+                                    <span class="semester-tag">(${m.semester.toUpperCase()}-24)</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            }
 
-    matches.forEach(match => {
-        if (!seenFaculty.has(match.faculty)) {
-            uniqueFaculty.push(match);
-            seenFaculty.add(match.faculty);
+            // Time matches (existing implementation)
+            if (matches.timeMatches.length > 0) {
+                const uniqueFaculty = [];
+                const seenFaculty = new Set();
+
+                matches.timeMatches.forEach(match => {
+                    if (!seenFaculty.has(match.faculty)) {
+                        uniqueFaculty.push(match);
+                        seenFaculty.add(match.faculty);
+                    }
+                });
+
+                html += `
+                    <div class="semester-group">
+                        <div class="time-match">
+                            Time Match Faculty:
+                            ${uniqueFaculty.map(match => `
+                                <div>
+                                    ${match.faculty}
+                                    <span class="semester-tag">${match.semester.toUpperCase()}-24 Sec ${match.section}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            return html;
         }
-    });
-
-    let html = `<div class="tba-info">TBA (Potential Faculty)</div>`;
-
-    html += `
-        <div class="semester-group">
-            <div class="time-match">
-                Potential Faculty:
-                ${uniqueFaculty.map(match => `
-                    <div>
-                        <span class="section-match">${match.semester.toUpperCase()} 2024 Section</span>:
-                        ${match.faculty}
-                        (<span class="time-match">Section ${match.section},
-                        ${match.schedule.map(s =>
-                            `${s.day} ${formatTime(s.start)}`
-                        ).join(', ')}</span>)
-                    </div>
-                `).join('')}
-            </div>
-        </div>`;
-
-    return html;
-}
 
         // Data loading with CDN fallback
 
@@ -329,41 +357,43 @@ async function loadCourseData(semester, filename) {
         }
 
         function renderTable(courses) {
-    tableBody.innerHTML = '';
+            tableBody.innerHTML = '';
 
-    courses.forEach(course => {
-        const row = document.createElement('tr');
-        let facultyInfo = course.faculty;
-        let seatStatus = 'N/A';
+            courses.forEach(course => {
+                const row = document.createElement('tr');
+                let facultyInfo = course.faculty;
+                let seatInfo = ['N/A', 'N/A', 'N/A'];
 
-        // Handle seat status
-        if (course.seats) {
-            seatStatus = course.seats.available > 0
-                ? `<span class="seats-available">${course.seats.available}/${course.seats.capacity}</span>`
-                : `<span class="seats-full">FULL (${course.seats.waitlist} waitlist)</span>`;
+                if (course.seats) {
+                    seatInfo = [
+                        `<span class="seats-available">${course.seats.available}</span>`,
+                        `<span class="seats-full">${course.seats.booked}</span>`,
+                        `<span>${course.seats.capacity}</span>`
+                    ];
+                }
+
+                if (course.faculty === 'TBA') {
+                    const matches = findMatches(course);
+                    facultyInfo = buildMatchInfo(matches);
+                }
+
+                row.innerHTML = `
+                    <td>${course.code}</td>
+                    <td>${course.section}</td>
+                    <td>${course.faculty !== 'TBA' ? course.faculty.split(' ').pop() : 'TBA'}</td>
+                    <td>${facultyInfo}</td>
+                    <td>${course.schedule.map(s =>
+                        `${s.day} ${formatTime(s.start)}`).join('<br>')}
+                    </td>
+                    <td>${seatInfo[0]}</td>
+                    <td>${seatInfo[1]}</td>
+                    <td>${seatInfo[2]}</td>
+                    <td>${course.examDate}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
         }
-
-        // Enhanced TBA faculty handling
-        if (course.faculty === 'TBA') {
-            const matches = findMatches(course);
-            facultyInfo = buildMatchInfo(matches);
-        }
-
-        row.innerHTML = `
-            <td>${course.code}</td>
-            <td>${course.section}</td>
-            <td>${course.faculty !== 'TBA' ? course.faculty.split(' ').pop() : 'TBA'}</td>
-            <td>${facultyInfo}</td>
-            <td>${course.schedule.map(s =>
-                `${s.day} ${formatTime(s.start)}`).join('<br>')}
-            </td>
-            <td>${seatStatus}</td>
-            <td>${course.examDate}</td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-}
 
         // Pagination and utilities
         function updatePagination() {
