@@ -556,3 +556,8 @@ tr:hover {
     width: 100%;
   }
 }
+
+/* No-wrap class */
+.nowrap {
+  white-space: nowrap !important;
+}

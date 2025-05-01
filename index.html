@@ -5,7 +5,7 @@
   <!-- Updated CSP to allow CDN resources and Google Fonts -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://usis-cdn.eniamza.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Course Information Portal</title>
+  <title>Connect Dump Analyser V1.2</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="styles.css">
@@ -15,7 +15,7 @@
 <body>
   <div class="container">
     <div id="data-status" class="data-status"></div>
-    <h1>Course Information Portal</h1>
+    <h1>Connect Dump Analyser V1.2</h1>
     <div class="button-container" id="semesterButtons">
       <!-- Semester buttons will be dynamically generated -->
     </div>
@@ -46,15 +46,15 @@
       <table>
         <thead>
           <tr>
-            <th>Code</th>
-            <th>Section</th>
-            <th>Faculty</th>
-            <th>Name</th>
-            <th>Schedule</th>
-            <th>Available</th>
-            <th>Booked</th>
-            <th>Capacity</th>
-            <th>Exam Time</th>
+            <th class="nowrap">Code</th>
+            <th class="nowrap">Section</th>
+            <th class="nowrap">Faculty</th>
+            <th class="nowrap">Name</th>
+            <th class="nowrap">Schedule</th>
+            <th class="nowrap">Available</th>
+            <th class="nowrap">Booked</th>
+            <th class="nowrap">Capacity</th>
+            <th class="nowrap">Exam Time</th>
           </tr>
         </thead>
         <tbody id="courseTable"></tbody>
