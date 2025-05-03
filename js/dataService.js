@@ -161,16 +161,20 @@ const DataService = {
 
     // Try CDN
     try {
+      console.log('Trying to fetch data from CDN...');
       const cdnResponse = await fetch(CONFIG.dataSources.cdnUrl);
       if (!cdnResponse.ok) {
         throw new Error(`CDN fetch failed with status: ${cdnResponse.status}`);
       }
 
       let cdnData = await cdnResponse.json();
+      console.log('CDN data fetched, format:', typeof cdnData, Array.isArray(cdnData) ? 'is array' : 'not array', cdnData.data ? 'has data property' : 'no data property');
+
       // Ensure the data is an array; if not, try extracting from a "data" property
       if (!Array.isArray(cdnData)) {
         if (cdnData.data && Array.isArray(cdnData.data)) {
           cdnData = cdnData.data;
+          console.log('Extracted data array from data property, length:', cdnData.length);
         } else {
           throw new Error('CDN data is not in the expected format');
         }
@@ -180,6 +184,7 @@ const DataService = {
       UIController.updateDataStatus('liveData');
 
       const normalizedData = Utils.normalizeCourseData(cdnData, 'spring25');
+      console.log('Data normalized, count:', normalizedData.length);
 
       // Cache the processed data
       Utils.saveToCache(cacheKey, normalizedData, CONFIG.cache.expirationMinutes);
@@ -190,17 +195,26 @@ const DataService = {
 
       // If skipping cache, try local file directly
       try {
+        console.log('Trying to fetch from local file summer-25.json...');
         const fileResponse = await fetch('summer-25.json');
         if (!fileResponse.ok) {
           throw new Error('Local file fetch failed');
         }
 
         const fileData = await fileResponse.json();
+        console.log('Local file data fetched, format:', typeof fileData, Array.isArray(fileData) ? 'is array' : 'not array', fileData.data ? 'has data property' : 'no data property');
 
         // Set status to offline data
         UIController.updateDataStatus('offlineData');
 
-        const normalizedData = Utils.normalizeCourseData(fileData, 'spring25');
+        let dataToNormalize = fileData;
+        if (!Array.isArray(fileData) && fileData.data && Array.isArray(fileData.data)) {
+          dataToNormalize = fileData.data;
+          console.log('Extracted data array from data property, length:', dataToNormalize.length);
+        }
+
+        const normalizedData = Utils.normalizeCourseData(dataToNormalize, 'spring25');
+        console.log('Data normalized, count:', normalizedData.length);
 
         // Cache the processed data if we're not skipping cache
         if (!skipCache) {
@@ -209,6 +223,7 @@ const DataService = {
 
         return normalizedData;
       } catch (fileError) {
+        console.error('Local file error:', fileError);
         throw new Error(`Both CDN and local file fetch failed: ${fileError.message}`);
       }
     }
@@ -250,12 +265,13 @@ const DataService = {
   /**
    * Find faculty matches for a course across other semesters
    * @param {Object} course - Course object
-   * @returns {Object} Object containing section and time matches
+   * @returns {Object} Object containing section, time, and room matches
    */
   findMatches: function(course) {
     const matches = {
       timeMatches: [],
-      sectionHistory: []
+      sectionHistory: [],
+      roomMatches: []
     };
 
     // Check all semesters for matches
@@ -265,11 +281,14 @@ const DataService = {
       this._semesterData[semId].forEach(prevCourse => {
         // Check section history matches
         if (prevCourse.code === course.code && prevCourse.section === course.section) {
-          matches.sectionHistory.push({
-            faculty: prevCourse.facultyInitial,
-            semester: semId,
-            schedule: prevCourse.schedule
-          });
+          // Only add if the previous faculty wasn't TBA
+          if (prevCourse.facultyInitial !== 'TBA') {
+            matches.sectionHistory.push({
+              faculty: prevCourse.facultyInitial,
+              semester: semId,
+              schedule: prevCourse.schedule
+            });
+          }
         }
 
         // Check time overlap matches
@@ -286,6 +305,16 @@ const DataService = {
             section: prevCourse.section,
             semester: semId,
             schedule: prevCourse.schedule
+          });
+        }
+
+        // Check for room matches (only based on course code)
+        if (prevCourse.code === course.code && prevCourse.room && prevCourse.room !== 'TBA') {
+          matches.roomMatches.push({
+            room: prevCourse.room,
+            section: prevCourse.section,
+            semester: semId,
+            faculty: prevCourse.facultyInitial
           });
         }
       });
@@ -316,6 +345,116 @@ const DataService = {
     }
 
     this._state.currentPage = 1;
+  },
+
+  /**
+   * Sort the filtered data by a given key and direction
+   * @param {string} key - The property to sort by
+   * @param {'asc'|'desc'} direction - Sort direction for the sorting
+   */
+  sortData: function(key, direction) {
+    // For debugging
+    console.log('DataService.sortData called with:', key, direction);
+
+    // Make a fresh copy of the data to ensure sorting works every time
+    const data = [...this._state.filteredData];
+
+    // Store current sort key and direction for comparison
+    const prevKey = this._sortKey;
+    const prevDirection = this._sortDirection;
+
+    // Update current sort settings
+    this._sortKey = key;
+    this._sortDirection = direction;
+
+    data.sort((a, b) => {
+      // 1. PRIMARY SORT: Always prioritize the user-selected column first
+      if (key !== 'code' && key !== 'section') {
+        let valA, valB;
+
+        // Special handling for different data types
+        switch(key) {
+          case 'facultyInitial':
+            valA = a.facultyInitial || '';
+            valB = b.facultyInitial || '';
+            break;
+
+          case 'schedule':
+            valA = a.schedule && a.schedule[0] ? `${a.schedule[0].day} ${a.schedule[0].start}` : '';
+            valB = b.schedule && b.schedule[0] ? `${b.schedule[0].day} ${b.schedule[0].start}` : '';
+            break;
+
+          case 'available':
+            valA = a.seats?.available || 0;
+            valB = b.seats?.available || 0;
+            break;
+
+          case 'booked':
+            valA = a.seats?.booked || 0;
+            valB = b.seats?.booked || 0;
+            break;
+
+          case 'capacity':
+            valA = a.seats?.capacity || 0;
+            valB = b.seats?.capacity || 0;
+            break;
+
+          default:
+            valA = a[key];
+            valB = b[key];
+        }
+
+        // Numeric sort if both are numbers
+        if (!isNaN(valA) && !isNaN(valB)) {
+          const numCompare = direction === 'asc' ? valA - valB : valB - valA;
+          if (numCompare !== 0) return numCompare;
+        } else {
+          // String sort
+          const strCompare = direction === 'asc'
+            ? String(valA || '').localeCompare(String(valB || ''))
+            : String(valB || '').localeCompare(String(valA || ''));
+          if (strCompare !== 0) return strCompare;
+        }
+      }
+
+      // Special handling for section sorting (as primary sort)
+      if (key === 'section') {
+        const sectionCompare = direction === 'asc'
+          ? String(a.section).localeCompare(String(b.section))
+          : String(b.section).localeCompare(String(a.section));
+        if (sectionCompare !== 0) return sectionCompare;
+
+        // If sections are equal, fall back to course code
+        return String(a.code).localeCompare(String(b.code));
+      }
+
+      // 2. SECONDARY SORT: Course code (if not already sorted by it)
+      if (key !== 'code') {
+        const codeCompare = String(a.code).localeCompare(String(b.code));
+        if (codeCompare !== 0) return codeCompare;
+      } else {
+        // If explicitly sorting by code, apply the requested direction
+        const codeCompare = direction === 'asc'
+          ? String(a.code).localeCompare(String(b.code))
+          : String(b.code).localeCompare(String(a.code));
+        if (codeCompare !== 0) return codeCompare;
+      }
+
+      // 3. TERTIARY SORT: Section (if not already sorted by it or code)
+      if (key !== 'section') {
+        return String(a.section).localeCompare(String(b.section));
+      }
+
+      return 0;
+    });
+
+    // Assign the sorted data back to filteredData
+    this._state.filteredData = data;
+
+    // If sort criteria changed, force a re-render by resetting to page 1
+    if (prevKey !== key || prevDirection !== direction) {
+      this._state.currentPage = 1;
+    }
   },
 
   /**

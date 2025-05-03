@@ -61,6 +61,12 @@ const Utils = {
           waitlist: parseInt(course.waitlistSeats || 0)
         };
       }
+
+      // Extract room information
+      const room = format === 'spring25'
+        ? this.extractRoomInfo(course.sectionSchedule?.classSchedules)
+        : (course.roomNo || 'TBA');
+
       return {
         code: course.courseCode,
         section: section,
@@ -68,9 +74,23 @@ const Utils = {
         facultyInitial: format === 'spring25' ? (course.faculties || 'TBA') : (course.empShortName || 'TBA'),
         schedule: this.getComparableSchedule(course, format),
         examDate: examDate,
-        seats: seats
+        seats: seats,
+        room: room
       };
     });
+  },
+
+  /**
+   * Extract room information from class schedules
+   * @param {Array} classSchedules - Array of class schedule objects
+   * @return {string} Room information or TBA
+   */
+  extractRoomInfo: function(classSchedules) {
+    if (!classSchedules || classSchedules.length === 0) return 'TBA';
+
+    // Try to get room information from the first schedule
+    const firstSchedule = classSchedules[0];
+    return firstSchedule.room || firstSchedule.roomNo || 'TBA';
   },
 
   /**
