@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDN Loading Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; white-space: pre-wrap; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>CDN Loading Test for Current Semester</h1>
+    <div id="status">Loading...</div>
+    <button onclick="testFall25Loading()">Test Fall 2025 CDN Loading</button>
+    <button onclick="testSummer25Loading()">Test Summer 2025 Local Loading</button>
+    <button onclick="clearLogs()">Clear Logs</button>
+    <div id="logs"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/uiController.js"></script>
+    <script src="js/dataService.js"></script>
+
+    <script>
+        let originalConsoleLog = console.log;
+        let originalConsoleWarn = console.warn;
+        let originalConsoleError = console.error;
+
+        function logToPage(type, ...args) {
+            const logsDiv = document.getElementById('logs');
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log';
+            logDiv.textContent = `[${type.toUpperCase()}] ${args.join(' ')}`;
+            logsDiv.appendChild(logDiv);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            logToPage('log', ...args);
+        };
+
+        console.warn = function(...args) {
+            originalConsoleWarn.apply(console, args);
+            logToPage('warn', ...args);
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            logToPage('error', ...args);
+        };
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        async function testFall25Loading() {
+            document.getElementById('status').innerHTML = '🔄 Testing Fall 2025 (Current Semester - Should try CDN first)...';
+            console.log('🧪 === TESTING FALL 2025 CDN-FIRST LOADING ===');
+
+            try {
+                const fall25Semester = CONFIG.dataSources.semesters.find(s => s.id === 'fall25');
+                console.log('📋 Fall 2025 semester config:', JSON.stringify(fall25Semester, null, 2));
+                console.log('🔍 Is Fall 25 current?', fall25Semester.isCurrent);
+                console.log('🌐 CDN URL:', CONFIG.dataSources.cdnUrl);
+
+                // Clear any existing cache first
+                localStorage.removeItem(Utils.getSemesterCacheKey('fall25'));
+                console.log('🗑️ Cleared cache for fall25');
+
+                const data = await DataService.loadSemesterData(fall25Semester);
+                console.log(`✅ Fall 2025 loaded successfully: ${data.length} courses`);
+                document.getElementById('status').innerHTML = `✅ Fall 2025 loaded: ${data.length} courses`;
+            } catch (error) {
+                console.error('❌ Fall 2025 loading failed:', error);
+                document.getElementById('status').innerHTML = `❌ Fall 2025 failed: ${error.message}`;
+            }
+        }
+
+        async function testSummer25Loading() {
+            document.getElementById('status').innerHTML = '🔄 Testing Summer 2025 (Past Semester - Should load from local file)...';
+            console.log('🧪 === TESTING SUMMER 2025 LOCAL LOADING ===');
+
+            try {
+                const summer25Semester = CONFIG.dataSources.semesters.find(s => s.id === 'summer25');
+                console.log('📋 Summer 2025 semester config:', summer25Semester);
+
+                const data = await DataService.loadSemesterData(summer25Semester);
+                console.log(`✅ Summer 2025 loaded successfully: ${data.length} courses`);
+                document.getElementById('status').innerHTML = `✅ Summer 2025 loaded: ${data.length} courses`;
+            } catch (error) {
+                console.error('❌ Summer 2025 loading failed:', error);
+                document.getElementById('status').innerHTML = `❌ Summer 2025 failed: ${error.message}`;
+            }
+        }
+
+        // Show initial status
+        document.getElementById('status').innerHTML = '🟢 Ready to test CDN vs Local loading behavior';
+        console.log('🚀 CDN Loading Test Page Ready');
+        console.log('📊 Current semester in config:', CONFIG.dataSources.semesters.find(s => s.isCurrent));
+    </script>
+</body>
+</html>

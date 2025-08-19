@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINAL Summer 25 Debug</title>
+    <style>
+        body { font-family: monospace; margin: 20px; }
+        .step { margin: 10px 0; padding: 10px; border-left: 4px solid #ccc; }
+        .pass { border-color: green; background: #e8f5e8; }
+        .fail { border-color: red; background: #f5e8e8; }
+        .running { border-color: orange; background: #fff3e0; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        pre { font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>FINAL Summer 25 Debug - Step by Step</h1>
+
+    <button onclick="runTest()">🔍 Run Complete Test</button>
+    <button onclick="clearLog()">🗑️ Clear</button>
+
+    <div id="log"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/dataService.js"></script>
+    <script src="js/uiController.js"></script>
+
+    <script>
+        let stepCount = 0;
+        const log = document.getElementById('log');
+
+        function logStep(title, status, details = '') {
+            stepCount++;
+            const div = document.createElement('div');
+            div.className = `step ${status}`;
+            div.innerHTML = `
+                <strong>Step ${stepCount}: ${title}</strong>
+                ${details ? `<pre>${details}</pre>` : ''}
+            `;
+            log.appendChild(div);
+            console.log(`Step ${stepCount}: ${title} - ${status.toUpperCase()}`);
+            if (details) console.log(details);
+        }
+
+        function clearLog() {
+            log.innerHTML = '';
+            stepCount = 0;
+        }
+
+        async function runTest() {
+            clearLog();
+
+            try {
+                // Step 1: Check config
+                logStep('Check Summer 25 Config', 'running');
+                const semester = CONFIG.dataSources.semesters.find(s => s.id === 'summer25');
+                if (!semester) {
+                    logStep('Check Summer 25 Config', 'fail', 'Summer 25 not found in config');
+                    return;
+                }
+                logStep('Check Summer 25 Config', 'pass', JSON.stringify(semester, null, 2));
+
+                // Step 2: Test file access
+                logStep('Test File Access', 'running');
+                const response = await fetch('summer-25.json');
+                if (!response.ok) {
+                    logStep('Test File Access', 'fail', `HTTP ${response.status}: ${response.statusText}`);
+                    return;
+                }
+                logStep('Test File Access', 'pass', `HTTP ${response.status} OK`);
+
+                // Step 3: Test JSON parsing
+                logStep('Test JSON Parsing', 'running');
+                const rawData = await response.json();
+                logStep('Test JSON Parsing', 'pass', `Parsed ${Array.isArray(rawData) ? rawData.length : 'non-array'} items`);
+
+                // Step 4: Test normalization
+                logStep('Test Data Normalization', 'running');
+                const courses = Array.isArray(rawData) ? rawData : (rawData.data || [rawData]);
+                const normalized = Utils.normalizeCourseData(courses, 'spring25');
+                logStep('Test Data Normalization', 'pass', `Normalized ${normalized.length} courses\nSample: ${JSON.stringify(normalized[0], null, 2)}`);
+
+                // Step 5: Initialize DataService
+                logStep('Initialize DataService', 'running');
+                await DataService.init();
+                logStep('Initialize DataService', 'pass', 'DataService initialized');
+
+                // Step 6: Test setCurrentSemester
+                logStep('Call setCurrentSemester(summer25)', 'running');
+                const data = await DataService.setCurrentSemester('summer25');
+                if (!data || data.length === 0) {
+                    logStep('Call setCurrentSemester(summer25)', 'fail', `Returned ${data?.length || 0} courses`);
+                    return;
+                }
+                logStep('Call setCurrentSemester(summer25)', 'pass', `Loaded ${data.length} courses`);
+
+                // Step 7: Check DataService state
+                logStep('Check DataService State', 'running');
+                const state = {
+                    currentSemester: DataService._state.currentSemester?.id,
+                    currentDataLength: DataService._state.currentData.length,
+                    filteredDataLength: DataService._state.filteredData.length,
+                    currentPage: DataService._state.currentPage
+                };
+                if (state.currentDataLength === 0 || state.filteredDataLength === 0) {
+                    logStep('Check DataService State', 'fail', JSON.stringify(state, null, 2));
+                    return;
+                }
+                logStep('Check DataService State', 'pass', JSON.stringify(state, null, 2));
+
+                // Step 8: Test filter function
+                logStep('Test Filter Function', 'running');
+                DataService.filterData('');
+                const filteredLength = DataService._state.filteredData.length;
+                if (filteredLength === 0) {
+                    logStep('Test Filter Function', 'fail', `Filter returned 0 courses`);
+                    return;
+                }
+                logStep('Test Filter Function', 'pass', `Filter returned ${filteredLength} courses`);
+
+                // Step 9: Test pagination
+                logStep('Test Pagination', 'running');
+                const pageData = DataService.getCurrentPageData();
+                if (pageData.length === 0) {
+                    logStep('Test Pagination', 'fail', `Pagination returned 0 courses`);
+                    return;
+                }
+                logStep('Test Pagination', 'pass', `Pagination returned ${pageData.length} courses`);
+
+                // Step 10: Test UI rendering
+                logStep('Test UI Rendering', 'running');
+                UIController.init();
+
+                // Create a test table
+                const testTable = document.createElement('tbody');
+                testTable.id = 'testTableBody';
+                document.body.appendChild(testTable);
+
+                // Set the test table as the target
+                const originalTableBody = UIController.elements.tableBody;
+                UIController.elements.tableBody = testTable;
+
+                UIController.renderTable(pageData);
+                const renderedRows = testTable.children.length;
+
+                // Restore original
+                UIController.elements.tableBody = originalTableBody;
+
+                if (renderedRows === 0) {
+                    logStep('Test UI Rendering', 'fail', `No table rows rendered`);
+                    return;
+                }
+                logStep('Test UI Rendering', 'pass', `Rendered ${renderedRows} table rows`);
+
+                // Final success
+                logStep('🎉 ALL TESTS PASSED', 'pass', 'Summer 25 should be working now!');
+
+            } catch (error) {
+                logStep('ERROR OCCURRED', 'fail', `${error.message}\n\n${error.stack}`);
+            }
+        }
+
+        // Auto-run on load
+        runTest();
+    </script>
+</body>
+</html>

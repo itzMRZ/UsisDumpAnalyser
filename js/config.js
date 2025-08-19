@@ -7,37 +7,37 @@ const CONFIG = {
     cdnUrl: 'https://usis-cdn.eniamza.com/connect.json',
     semesters: [
       {
-        id: 'fall25',
+        id: 'fall25',           // ← Fixed: unique ID
         name: 'Fall 2025',
         file: 'fall-25.json',
         year: '2025',
-        dataFormat: 'fall25',
-        isCurrent: true
+        dataFormat: 'spring25',
+        isCurrent: true         // ← Current semester (Fall 25 is current)
       },
       {
-        id: 'summer25',
+        id: 'summer25',         // ← Fixed: matches dataService expectation
         name: 'Summer 2025',
         file: 'summer-25.json',
         year: '2025',
-        dataFormat: 'spring25',
-        isCurrent: false
+        dataFormat: 'spring25'
+        // Summer 25 is NOT current - it's a past semester
       },
       {
-        id: 'spring',
+        id: 'spring25',         // ← Fixed: unique ID
         name: 'Spring 2025',
         file: 'spring-25.json',
         year: '2025',
         dataFormat: 'spring25'
       },
       {
-        id: 'fall',
+        id: 'fall24',           // ← Fixed: unique ID
         name: 'Fall 2024',
         file: 'fall-24.json',
         year: '2024',
         dataFormat: 'old'
       },
       {
-        id: 'summer',
+        id: 'summer24',         // ← Fixed: unique ID
         name: 'Summer 2024',
         file: 'summer-24.json',
         year: '2024',

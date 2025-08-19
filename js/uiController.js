@@ -437,17 +437,11 @@ const UIController = {
       // If the status is still showing loading, set it to the appropriate status
       // This happens if the specific loaders didn't update the status
       if (this.elements.dataStatus.textContent.includes('Loading')) {
-        if (semester.id === 'spring') {
-          this.updateDataStatus('localData', {
-            semester: 'Spring',
-            year: '2025'
-          });
-        } else if (semester.id !== 'summer25') {
-          this.updateDataStatus('localData', {
-            semester: semester.name.split(' ')[0],
-            year: semester.year
-          });
-        }
+        // Set local data status for all semesters
+        this.updateDataStatus('localData', {
+          semester: semester.name.split(' ')[0],
+          year: semester.year
+        });
       }
     } catch (error) {
       // Show error status
@@ -471,8 +465,10 @@ const UIController = {
    * @param {Array} courses - Array of course objects to display
    */
   renderTable: function(courses) {
+    console.log(`🎨 renderTable called with ${courses?.length || 0} courses`);
+
     if (!this.elements.tableBody) {
-      console.error('Table body element not found in DOM!');
+      console.error('❌ Table body element not found in DOM!');
       return;
     }
 
@@ -481,6 +477,7 @@ const UIController = {
 
     // Check if data is available
     if (!courses || courses.length === 0) {
+      console.log(`⚠️ No courses to render`);
       this.elements.tableBody.innerHTML = `
         <tr>
           <td colspan="9">No courses found. Please try another search or select a different semester.</td>
@@ -489,7 +486,8 @@ const UIController = {
       return;
     }
 
-    console.log('Rendering table with', courses.length, 'courses');
+    console.log(`🔄 Rendering table with ${courses.length} courses`);
+    console.log(`📊 Sample course data:`, courses[0]);
 
     try {
       courses.forEach(course => {

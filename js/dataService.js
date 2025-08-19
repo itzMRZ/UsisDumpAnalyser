@@ -3,8 +3,9 @@
  * Handles data fetching, caching, and processing
  */
 const DataService = {
-  // Cache for semester data
+  // Cache for semester data with metadata
   _semesterData: {},
+  _semesterDataSource: {}, // Track whether data came from CDN, local, or cache
 
   // Current application state
   _state: {
@@ -45,18 +46,52 @@ const DataService = {
    * @returns {Promise} Promise resolving with the loaded data
    */
   setCurrentSemester: async function(semesterId) {
+    console.log(`🎯 setCurrentSemester called with: ${semesterId}`);
     const semester = this.getSemesterConfig(semesterId);
     if (!semester) {
       throw new Error(`Unknown semester: ${semesterId}`);
     }
 
+    console.log(`📋 Semester config found:`, semester);
     this._state.currentSemester = semester;
     this._state.currentPage = 1;
 
+    // Check if data is already loaded in cache
+    if (this._semesterData[semesterId]) {
+      console.log(`💾 Using already loaded data for ${semesterId}: ${this._semesterData[semesterId].length} courses`);
+      
+      // Set appropriate status based on how the data was originally loaded
+      const dataSource = this._semesterDataSource[semesterId] || 'local';
+      if (dataSource === 'cdn') {
+        UIController.updateDataStatus('liveData');
+        console.log(`🟢 Status updated to Live Data for ${semesterId} (originally from CDN)`);
+      } else if (semester.isCurrent) {
+        UIController.updateDataStatus('offlineData');
+        console.log(`🔴 Status updated to Offline Data for current semester ${semesterId}`);
+      } else {
+        UIController.updateDataStatus('localData', {
+          semester: semester.name.split(' ')[0],
+          year: semester.year
+        });
+        console.log(`🟠 Status updated to Local Data for ${semesterId}`);
+      }
+      
+      this._state.currentData = this._semesterData[semesterId];
+      this._state.filteredData = [...this._semesterData[semesterId]];
+      console.log(`✅ State updated for ${semesterId}: currentData=${this._state.currentData.length}, filteredData=${this._state.filteredData.length}`);
+      return this._semesterData[semesterId];
+    }
+
+    // Load data for the first time
+    console.log(`🔄 Loading data for first time: ${semesterId}`);
     const data = await this.loadSemesterData(semester);
+    console.log(`📊 Loaded data for ${semesterId}: ${data?.length || 0} courses`);
+
+    this._semesterData[semesterId] = data; // Cache it
     this._state.currentData = data;
     this._state.filteredData = [...data];
 
+    console.log(`✅ Final state for ${semesterId}: currentData=${this._state.currentData.length}, filteredData=${this._state.filteredData.length}`);
     return data;
   },
 
@@ -65,19 +100,24 @@ const DataService = {
    * @returns {Promise} Promise resolving when all data is loaded
    */
   preloadAllSemesterData: async function() {
+    console.log('🚀 Starting preload for all semesters...');
     const promises = CONFIG.dataSources.semesters.map(semester => {
+      console.log(`📋 Queueing preload for semester: ${semester.id} (${semester.name})`);
       return this.loadSemesterData(semester)
         .then(data => {
+          console.log(`✅ Successfully preloaded ${semester.id}: ${data?.length || 0} courses`);
           this._semesterData[semester.id] = data;
           return { id: semester.id, data };
         })
         .catch(error => {
-          console.warn(`Failed to preload ${semester.id} data:`, error);
+          console.warn(`❌ Failed to preload ${semester.id} data:`, error);
           return { id: semester.id, data: null };
         });
     });
 
-    return Promise.all(promises);
+    const results = await Promise.all(promises);
+    console.log('🏁 Preload completed. Results:', results.map(r => ({ id: r.id, loaded: !!r.data, count: r.data?.length || 0 })));
+    return results;
   },
 
   /**
@@ -86,180 +126,131 @@ const DataService = {
    * @returns {Promise<Array>} Promise resolving with normalized course data
    */
   loadSemesterData: async function(semester) {
+    console.log(`🔄 Loading data for semester: ${semester.id} (${semester.name})`);
+    console.log(`🔍 Semester isCurrent status: ${semester.isCurrent}`);
     const cacheKey = Utils.getSemesterCacheKey(semester.id);
 
-    // For current semester, always try CDN first (skip cache)
-    if (semester.isCurrent) {
-      try {
-        console.log(`Current semester (${semester.id}): Loading fresh data from CDN`);
-        const data = await this.loadSummer25Data(true); // true = skip cache
-        return data;
-      } catch (error) {
-        console.warn(`Failed to load current semester data from CDN: ${error.message}`);
-        // Will continue to try cache and local file below
-      }
-    } else {
-      // For older semesters, check cache first
+    // For older semesters, check cache first
+    if (!semester.isCurrent) {
+      console.log(`📦 Non-current semester - checking cache first for ${semester.id}`);
       const cachedData = Utils.getFromCache(cacheKey);
       if (cachedData) {
-        console.log(`Using cached data for ${semester.id}`);
+        console.log(`💾 Using cached data for ${semester.id}: ${cachedData.length} courses`);
         return cachedData;
       }
+      console.log(`❌ No cache found for non-current semester ${semester.id}`);
+    } else {
+      console.log(`🚀 Current semester detected - skipping cache check for ${semester.id}`);
     }
 
     let data;
-    try {
-      // Handle special case for Summer 2025 (live data)
-      if (semester.id === 'summer25') {
-        data = await this.loadSummer25Data(false); // false = allow cached/local fallback
-      } else if (semester.id === 'spring') {
-        data = await this.loadSpringData();
-        // Spring status is already set in loadSpringData, no need to set it here
-      } else {
-        const response = await fetch(semester.file);
-        if (!response.ok) throw new Error(`Failed to load ${semester.file}`);
-        const rawData = await response.json();
-        const courses = rawData.data ? rawData.data : (Array.isArray(rawData) ? rawData : [rawData]);
-        data = Utils.normalizeCourseData(courses, semester.dataFormat);
 
-        // Only set status for semesters other than spring and current
-        UIController.updateDataStatus('localData', {
-          semester: semester.name.split(' ')[0],
-          year: semester.year
-        });
-      }
-
-      // Sort courses by code
-      data.sort((a, b) => a.code.localeCompare(b.code));
-
-      // Cache the processed data
-      Utils.saveToCache(cacheKey, data, CONFIG.cache.expirationMinutes);
-
-      return data;
-    } catch (error) {
-      throw new Error(`Failed to load data for ${semester.name}: ${error.message}`);
-    }
-  },
-
-  /**
-   * Load Summer 2025 data from CDN with fallback to cache/local file
-   * @param {boolean} skipCache - If true, skip cache and always try CDN
-   * @returns {Promise<Array>} Promise resolving with normalized course data
-   */
-  loadSummer25Data: async function(skipCache = false) {
-    const cacheKey = Utils.getSemesterCacheKey('summer25');
-
-    // Check cache first if not skipping
-    if (!skipCache) {
-      const cachedData = Utils.getFromCache(cacheKey);
-      if (cachedData) {
-        console.log('Using cached Summer 2025 data');
-        UIController.updateDataStatus('localData', { semester: 'Summer', year: '2025' });
-        return cachedData;
-      }
-    }
-
-    // Try CDN
-    try {
-      console.log('Trying to fetch data from CDN...');
-      const cdnResponse = await fetch(CONFIG.dataSources.cdnUrl);
-      if (!cdnResponse.ok) {
-        throw new Error(`CDN fetch failed with status: ${cdnResponse.status}`);
-      }
-
-      let cdnData = await cdnResponse.json();
-      console.log('CDN data fetched, format:', typeof cdnData, Array.isArray(cdnData) ? 'is array' : 'not array', cdnData.data ? 'has data property' : 'no data property');
-
-      // Ensure the data is an array; if not, try extracting from a "data" property
-      if (!Array.isArray(cdnData)) {
-        if (cdnData.data && Array.isArray(cdnData.data)) {
-          cdnData = cdnData.data;
-          console.log('Extracted data array from data property, length:', cdnData.length);
-        } else {
-          throw new Error('CDN data is not in the expected format');
-        }
-      }
-
-      // Set status to live data
-      UIController.updateDataStatus('liveData');
-
-      const normalizedData = Utils.normalizeCourseData(cdnData, 'spring25');
-      console.log('Data normalized, count:', normalizedData.length);
-
-      // Cache the processed data
-      Utils.saveToCache(cacheKey, normalizedData, CONFIG.cache.expirationMinutes);
-
-      return normalizedData;
-    } catch (cdnError) {
-      console.warn('CDN fetch error:', cdnError.message);
-
-      // If skipping cache, try local file directly
+    // For current semester, try CDN first
+    if (semester.isCurrent) {
+      console.log(`🌐 Current semester detected - trying CDN first for ${semester.id}...`);
       try {
-        console.log('Trying to fetch from local file summer-25.json...');
-        const fileResponse = await fetch('summer-25.json');
-        if (!fileResponse.ok) {
-          throw new Error('Local file fetch failed');
+        console.log(`� Fetching from CDN: ${CONFIG.dataSources.cdnUrl}`);
+        const cdnResponse = await fetch(CONFIG.dataSources.cdnUrl);
+        console.log(`📡 CDN response status: ${cdnResponse.status} ${cdnResponse.statusText}`);
+
+        if (cdnResponse.ok) {
+          console.log(`📥 Parsing CDN response as JSON...`);
+          let cdnData = await cdnResponse.json();
+          console.log('🔍 CDN data received:', {
+            type: typeof cdnData,
+            isArray: Array.isArray(cdnData),
+            hasDataProperty: !!cdnData.data,
+            topLevelKeys: typeof cdnData === 'object' ? Object.keys(cdnData) : 'N/A'
+          });
+
+          // Ensure the data is an array; if not, try extracting from a "data" property
+          if (!Array.isArray(cdnData)) {
+            if (cdnData.data && Array.isArray(cdnData.data)) {
+              cdnData = cdnData.data;
+              console.log(`📋 Extracted data array from CDN data property, length: ${cdnData.length}`);
+            } else {
+              throw new Error('CDN data is not in the expected format');
+            }
+          } else {
+            console.log(`📋 CDN data is already an array, length: ${cdnData.length}`);
+          }
+
+          console.log(`🔄 Normalizing CDN data...`);
+          data = Utils.normalizeCourseData(cdnData, semester.dataFormat);
+          console.log(`✅ Data normalized from CDN, final count: ${data.length}`);
+
+          // Set status to live data
+          UIController.updateDataStatus('liveData');
+
+          // Track that this data came from CDN
+          this._semesterDataSource[semester.id] = 'cdn';
+
+          // Cache the processed data
+          Utils.saveToCache(cacheKey, data, CONFIG.cache.expirationMinutes);
+          console.log(`💾 CDN data cached for ${semester.id}`);
+
+          console.log(`🔢 Loaded ${data?.length || 0} courses from CDN for ${semester.id}`);
+          return data;
+          throw new Error(`CDN fetch failed with status: ${cdnResponse.status}`);
+        }
+      } catch (cdnError) {
+        console.warn(`❌ CDN fetch failed for current semester ${semester.id}:`, cdnError.message);
+        console.log(`📁 Falling back to local file for current semester...`);
+        data = null; // Will trigger local file loading below
+      }
+    }
+
+    // If CDN failed or not current semester, load from local file
+    if (!data) {
+      try {
+        console.log(`� Loading from local file for ${semester.id}...`);
+        console.log(`📄 Loading semester file: ${semester.file}`);
+        console.log(`🔗 Full fetch URL: ${window.location.origin}/${semester.file}`);
+
+        const response = await fetch(semester.file);
+        console.log(`📡 Response for ${semester.file}: status=${response.status}, ok=${response.ok}, statusText=${response.statusText}`);
+
+        if (!response.ok) {
+          console.error(`❌ Failed to fetch ${semester.file}: ${response.status} ${response.statusText}`);
+          throw new Error(`Failed to load ${semester.file}: ${response.status} ${response.statusText}`);
         }
 
-        const fileData = await fileResponse.json();
-        console.log('Local file data fetched, format:', typeof fileData, Array.isArray(fileData) ? 'is array' : 'not array', fileData.data ? 'has data property' : 'no data property');
+        console.log(`📥 Parsing JSON for ${semester.file}...`);
+        const rawData = await response.json();
+        console.log(`🔍 Raw data for ${semester.file}: type=${typeof rawData}, isArray=${Array.isArray(rawData)}, length=${Array.isArray(rawData) ? rawData.length : 'N/A'}`);
 
-        // Set status to offline data
-        UIController.updateDataStatus('offlineData');
+        const courses = rawData.data ? rawData.data : (Array.isArray(rawData) ? rawData : [rawData]);
+        console.log(`📋 Courses array for ${semester.file}: length=${courses.length}`);
 
-        let dataToNormalize = fileData;
-        if (!Array.isArray(fileData) && fileData.data && Array.isArray(fileData.data)) {
-          dataToNormalize = fileData.data;
-          console.log('Extracted data array from data property, length:', dataToNormalize.length);
+        data = Utils.normalizeCourseData(courses, semester.dataFormat);
+        console.log(`✅ Normalized data for ${semester.file}: ${data.length} courses`);
+
+        // Set appropriate status based on whether this was a fallback or primary load
+        if (semester.isCurrent) {
+          UIController.updateDataStatus('offlineData');
+        } else {
+          UIController.updateDataStatus('localData', {
+            semester: semester.name.split(' ')[0],
+            year: semester.year
+          });
         }
 
-        const normalizedData = Utils.normalizeCourseData(dataToNormalize, 'spring25');
-        console.log('Data normalized, count:', normalizedData.length);
+        console.log(`🔢 Loaded ${data?.length || 0} courses from local file for ${semester.id}`);
 
-        // Cache the processed data if we're not skipping cache
-        if (!skipCache) {
-          Utils.saveToCache(cacheKey, normalizedData, CONFIG.cache.expirationMinutes);
-        }
-
-        return normalizedData;
       } catch (fileError) {
-        console.error('Local file error:', fileError);
-        throw new Error(`Both CDN and local file fetch failed: ${fileError.message}`);
+        console.error(`❌ Local file error for ${semester.id}:`, fileError);
+        throw new Error(`Failed to load ${semester.file}: ${fileError.message}`);
       }
     }
-  },
 
-  /**
-   * Load Spring data from local file only (no CDN)
-   * @returns {Promise<Array>} Promise resolving with normalized course data
-   */
-  loadSpringData: async function() {
-    try {
-      // Explicitly set a loading status here to indicate progress
-      console.log('Loading Spring 2025 data from local file');
+    // Sort courses by code
+    data.sort((a, b) => a.code.localeCompare(b.code));
 
-      const fileResponse = await fetch('spring-25.json');
-      if (!fileResponse.ok) {
-        throw new Error('Failed to load spring-25.json');
-      }
+    // Cache the processed data
+    Utils.saveToCache(cacheKey, data, CONFIG.cache.expirationMinutes);
+    console.log(`💾 Cached data for ${semester.id}`);
 
-      const fileData = await fileResponse.json();
-      // Make sure to only use the array part if needed
-      const courses = fileData.data ? fileData.data : (Array.isArray(fileData) ? fileData : [fileData]);
-
-      // Set status AFTER we have successfully loaded the data
-      UIController.updateDataStatus('localData', {
-        semester: 'Spring',
-        year: '2025'
-      });
-
-      // Return the normalized data
-      return Utils.normalizeCourseData(courses, 'spring25');
-    } catch (fileError) {
-      console.error('Error loading Spring data:', fileError);
-      UIController.updateDataStatus('offlineData');
-      throw fileError;
-    }
+    return data;
   },
 
   /**
@@ -329,9 +320,11 @@ const DataService = {
    */
   filterData: function(searchText) {
     const filter = searchText.trim().toUpperCase();
+    console.log(`🔍 filterData called with: "${searchText}" (${this._state.currentData.length} total courses)`);
 
     if (!filter) {
       this._state.filteredData = [...this._state.currentData];
+      console.log(`📋 No filter, showing all ${this._state.filteredData.length} courses`);
     } else {
       this._state.filteredData = this._state.currentData.filter(course => {
         const matchCode = course.code.toUpperCase().includes(filter);
@@ -342,6 +335,7 @@ const DataService = {
         );
         return matchCode || matchSection || matchFaculty || matchSchedule;
       });
+      console.log(`🔍 Filter "${filter}" resulted in ${this._state.filteredData.length} courses`);
     }
 
     this._state.currentPage = 1;
@@ -464,7 +458,9 @@ const DataService = {
   getCurrentPageData: function() {
     const start = (this._state.currentPage - 1) * CONFIG.pagination.itemsPerPage;
     const end = start + CONFIG.pagination.itemsPerPage;
-    return this._state.filteredData.slice(start, end);
+    const pageData = this._state.filteredData.slice(start, end);
+    console.log(`📄 getCurrentPageData: page ${this._state.currentPage}, returning ${pageData.length} courses (${start}-${end} of ${this._state.filteredData.length} filtered)`);
+    return pageData;
   },
 
   /**

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer 25 Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .loading { background: #fff3cd; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Summer 25 Loading Debug</h1>
+
+    <button id="testBtn">Test Load Summer 25</button>
+    <button id="clearBtn">Clear Results</button>
+
+    <div id="status" class="status"></div>
+    <div id="results"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const resultsDiv = document.getElementById('results');
+
+        function updateStatus(message, type = 'loading') {
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+            console.log(message);
+        }
+
+        async function testSummer25Loading() {
+            try {
+                updateStatus('🔄 Starting Summer 25 test...', 'loading');
+
+                // Get the semester config for summer25
+                const semester = CONFIG.dataSources.semesters.find(s => s.id === 'summer25');
+                updateStatus(`📋 Found semester config: ${semester.name} (${semester.file})`, 'loading');
+
+                // Test direct file loading
+                updateStatus('📁 Attempting to load summer-25.json...', 'loading');
+                const startTime = performance.now();
+
+                const response = await fetch(semester.file);
+                const fetchTime = performance.now();
+                updateStatus(`📡 Fetch completed in ${Math.round(fetchTime - startTime)}ms. Status: ${response.status}`, 'loading');
+
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${semester.file}: ${response.status}`);
+                }
+
+                updateStatus('📥 Parsing JSON...', 'loading');
+                const parseStartTime = performance.now();
+                const rawData = await response.json();
+                const parseTime = performance.now();
+
+                updateStatus(`✅ JSON parsed in ${Math.round(parseTime - parseStartTime)}ms`, 'loading');
+
+                // Analyze data structure
+                const dataInfo = {
+                    type: typeof rawData,
+                    isArray: Array.isArray(rawData),
+                    length: Array.isArray(rawData) ? rawData.length : 'N/A',
+                    hasDataProperty: rawData.data ? 'Yes' : 'No',
+                    firstItemKeys: Array.isArray(rawData) && rawData[0] ? Object.keys(rawData[0]) : 'N/A'
+                };
+
+                updateStatus('🔍 Analyzing data structure...', 'loading');
+                resultsDiv.innerHTML = `
+                    <h3>Raw Data Analysis:</h3>
+                    <pre>${JSON.stringify(dataInfo, null, 2)}</pre>
+                `;
+
+                // Test normalization
+                updateStatus('🔄 Testing normalization...', 'loading');
+                const normStartTime = performance.now();
+
+                const courses = Array.isArray(rawData) ? rawData : (rawData.data || [rawData]);
+                const normalizedData = Utils.normalizeCourseData(courses, semester.dataFormat);
+
+                const normTime = performance.now();
+                updateStatus(`✅ Normalization completed in ${Math.round(normTime - normStartTime)}ms`, 'success');
+
+                // Show final results
+                const totalTime = performance.now() - startTime;
+                resultsDiv.innerHTML += `
+                    <h3>Normalization Results:</h3>
+                    <pre>Original count: ${courses.length}
+Normalized count: ${normalizedData.length}
+Total time: ${Math.round(totalTime)}ms</pre>
+
+                    <h3>Sample Normalized Data (first 3 courses):</h3>
+                    <pre>${JSON.stringify(normalizedData.slice(0, 3), null, 2)}</pre>
+                `;
+
+                updateStatus(`🎉 Test completed successfully! ${normalizedData.length} courses loaded in ${Math.round(totalTime)}ms`, 'success');
+
+            } catch (error) {
+                updateStatus(`❌ Error: ${error.message}`, 'error');
+                resultsDiv.innerHTML = `
+                    <h3>Error Details:</h3>
+                    <pre style="color: red;">${error.stack}</pre>
+                `;
+                console.error('Test error:', error);
+            }
+        }
+
+        document.getElementById('testBtn').addEventListener('click', testSummer25Loading);
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            statusDiv.innerHTML = '';
+            resultsDiv.innerHTML = '';
+        });
+
+        // Auto-run test on page load
+        testSummer25Loading();
+    </script>
+</body>
+</html>

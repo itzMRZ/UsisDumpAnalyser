@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataService State Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .debug { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        pre { background: #e9ecef; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>DataService State Debug</h1>
+
+    <button onclick="loadSummer25()">Load Summer 25</button>
+    <button onclick="checkState()">Check DataService State</button>
+    <button onclick="testFilter()">Test Filter</button>
+    <button onclick="testPagination()">Test Pagination</button>
+
+    <div id="output" class="debug"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/dataService.js"></script>
+    <script src="js/uiController.js"></script>
+
+    <script>
+        function output(title, data) {
+            const div = document.getElementById('output');
+            div.innerHTML += `
+                <h3>${title}</h3>
+                <pre>${typeof data === 'object' ? JSON.stringify(data, null, 2) : data}</pre>
+            `;
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+
+        async function loadSummer25() {
+            clearOutput();
+            try {
+                output('Loading Summer 25...', 'Starting load process');
+
+                const data = await DataService.setCurrentSemester('summer25');
+
+                output('Load Result', {
+                    dataLength: data?.length || 0,
+                    firstCourse: data?.[0] || 'No data'
+                });
+
+                checkState();
+
+            } catch (error) {
+                output('Error', error.message);
+                console.error('Load error:', error);
+            }
+        }
+
+        function checkState() {
+            const state = {
+                currentSemester: DataService._state.currentSemester?.id || 'None',
+                currentDataLength: DataService._state.currentData.length,
+                filteredDataLength: DataService._state.filteredData.length,
+                currentPage: DataService._state.currentPage,
+                cachedSemesters: Object.keys(DataService._semesterData).map(id => ({
+                    id,
+                    length: DataService._semesterData[id]?.length || 0
+                }))
+            };
+
+            output('Current DataService State', state);
+        }
+
+        function testFilter() {
+            DataService.filterData('');
+            const pageData = DataService.getCurrentPageData();
+
+            output('After Empty Filter', {
+                filteredLength: DataService._state.filteredData.length,
+                pageDataLength: pageData.length,
+                firstPageCourse: pageData[0] || 'No data'
+            });
+        }
+
+        function testPagination() {
+            const pageData = DataService.getCurrentPageData();
+            const paginationInfo = DataService.getPaginationInfo();
+
+            output('Pagination Test', {
+                pageData: pageData.length,
+                paginationInfo,
+                firstCourse: pageData[0] || 'No data'
+            });
+        }
+
+        // Initialize
+        UIController.init();
+    </script>
+</body>
+</html>
