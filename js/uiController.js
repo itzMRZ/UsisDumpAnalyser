@@ -577,32 +577,6 @@ const UIController = {
   },
 
   /**
-   * Display courses in sorted order
-   * @param {Array} courses - Array of course objects to display
-   */
-  displayCourses: function(courses) {
-    const coursesCopy = [...courses]; // Create a copy first
-    const sortedCourses = coursesCopy.sort((a, b) => a.courseCode.localeCompare(b.courseCode));
-    const tbody = document.getElementById('courseTableBody');
-    tbody.innerHTML = '';
-
-    sortedCourses.forEach(course => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${course.code}</td>
-        <td>${course.section}</td>
-        <td>${course.faculty}</td>
-        <td>${course.schedule.map(s => `${s.day} ${Utils.formatTime(s.start)}`).join('<br>')}</td>
-        <td>${course.seats.available}</td>
-        <td>${course.seats.booked}</td>
-        <td>${course.seats.capacity}</td>
-        <td>${course.examDate}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  },
-
-  /**
    * Update pagination information and button states
    */
   updatePagination: function() {
@@ -704,13 +678,7 @@ const UIController = {
 
               // Format semester name for display
               let semesterName;
-              if (m.semester === 'summer25') {
-                semesterName = 'SUMMER';
-              } else if (semConfig) {
-                semesterName = semConfig.name.split(' ')[0].toUpperCase();
-              } else {
-                semesterName = m.semester.toUpperCase();
-              }
+              semesterName = semConfig ? semConfig.name.split(' ')[0].toUpperCase() : m.semester.toUpperCase();
 
               return `
               <div>
@@ -746,13 +714,7 @@ const UIController = {
 
               // Format semester name for display
               let semesterName;
-              if (match.semester === 'summer25') {
-                semesterName = 'SUMMER';
-              } else if (semConfig) {
-                semesterName = semConfig.name.split(' ')[0].toUpperCase();
-              } else {
-                semesterName = match.semester.toUpperCase();
-              }
+              semesterName = semConfig ? semConfig.name.split(' ')[0].toUpperCase() : match.semester.toUpperCase();
 
               return `
               <div>
@@ -788,13 +750,7 @@ const UIController = {
 
               // Format semester name for display
               let semesterName;
-              if (match.semester === 'summer25') {
-                semesterName = 'SUMMER';
-              } else if (semConfig) {
-                semesterName = semConfig.name.split(' ')[0].toUpperCase();
-              } else {
-                semesterName = match.semester.toUpperCase();
-              }
+              semesterName = semConfig ? semConfig.name.split(' ')[0].toUpperCase() : match.semester.toUpperCase();
 
               return `
               <div>
@@ -870,36 +826,3 @@ const UIController = {
     });
   }
 };
-
-/**
- * Sort table data
- * @param {Array} tableData - Array of table data objects
- * @returns {Array} Sorted table data
- */
-function sortTableData(tableData) {
-  return [...tableData].sort((a, b) => {
-    // Always sort by course code first
-    const courseCodeComparison = a.code.localeCompare(b.code);
-    if (courseCodeComparison !== 0) {
-      return courseCodeComparison;
-    }
-    // Then by section
-    return a.section.localeCompare(b.section);
-  });
-}
-
-/**
- * Sort data
- * @param {Array} data - Array of data objects
- * @returns {Array} Sorted data
- */
-function sortData(data) {
-  return [...data].sort((a, b) => {
-    // Always sort by course code first
-    const codeComparison = a.code.localeCompare(b.code);
-    if (codeComparison !== 0) return codeComparison;
-
-    // Secondary sort by section if course codes are equal
-    return a.section.localeCompare(b.section);
-  });
-}

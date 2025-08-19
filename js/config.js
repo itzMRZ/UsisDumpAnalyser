@@ -2,6 +2,8 @@
  * Configuration settings for the Course Information Portal
  */
 const CONFIG = {
+  // Global debug flag (set to true for verbose console logging)
+  debug: false,
   // Data Sources
   dataSources: {
     cdnUrl: 'https://usis-cdn.eniamza.com/connect.json',

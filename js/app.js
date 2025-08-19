@@ -44,12 +44,3 @@
     Utils.handleError(error, UIController.elements.tableBody);
   }
 })();
-
-function sortTableData(data) {
-    return data.sort((a, b) => {
-        // Always sort by course code first
-        const courseCodeA = a.courseCode;
-        const courseCodeB = b.courseCode;
-        return courseCodeA.localeCompare(courseCodeB);
-    });
-}

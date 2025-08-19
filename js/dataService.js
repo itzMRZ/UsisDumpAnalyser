@@ -59,7 +59,7 @@ const DataService = {
     // Check if data is already loaded in cache
     if (this._semesterData[semesterId]) {
       console.log(`💾 Using already loaded data for ${semesterId}: ${this._semesterData[semesterId].length} courses`);
-      
+
       // Set appropriate status based on how the data was originally loaded
       const dataSource = this._semesterDataSource[semesterId] || 'local';
       if (dataSource === 'cdn') {
@@ -75,7 +75,7 @@ const DataService = {
         });
         console.log(`🟠 Status updated to Local Data for ${semesterId}`);
       }
-      
+
       this._state.currentData = this._semesterData[semesterId];
       this._state.filteredData = [...this._semesterData[semesterId]];
       console.log(`✅ State updated for ${semesterId}: currentData=${this._state.currentData.length}, filteredData=${this._state.filteredData.length}`);
@@ -191,7 +191,6 @@ const DataService = {
 
           console.log(`🔢 Loaded ${data?.length || 0} courses from CDN for ${semester.id}`);
           return data;
-          throw new Error(`CDN fetch failed with status: ${cdnResponse.status}`);
         }
       } catch (cdnError) {
         console.warn(`❌ CDN fetch failed for current semester ${semester.id}:`, cdnError.message);
@@ -219,7 +218,14 @@ const DataService = {
         const rawData = await response.json();
         console.log(`🔍 Raw data for ${semester.file}: type=${typeof rawData}, isArray=${Array.isArray(rawData)}, length=${Array.isArray(rawData) ? rawData.length : 'N/A'}`);
 
-        const courses = rawData.data ? rawData.data : (Array.isArray(rawData) ? rawData : [rawData]);
+        let courses;
+        if (rawData && rawData.data && Array.isArray(rawData.data)) {
+          courses = rawData.data;
+        } else if (Array.isArray(rawData)) {
+          courses = rawData;
+        } else {
+          courses = [rawData];
+        }
         console.log(`📋 Courses array for ${semester.file}: length=${courses.length}`);
 
         data = Utils.normalizeCourseData(courses, semester.dataFormat);
@@ -374,8 +380,8 @@ const DataService = {
             break;
 
           case 'schedule':
-            valA = a.schedule && a.schedule[0] ? `${a.schedule[0].day} ${a.schedule[0].start}` : '';
-            valB = b.schedule && b.schedule[0] ? `${b.schedule[0].day} ${b.schedule[0].start}` : '';
+            valA = a.schedule?.[0] ? `${a.schedule[0].day} ${a.schedule[0].start}` : '';
+            valB = b.schedule?.[0] ? `${b.schedule[0].day} ${b.schedule[0].start}` : '';
             break;
 
           case 'available':
