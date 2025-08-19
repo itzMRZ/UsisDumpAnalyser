@@ -7,12 +7,20 @@ const CONFIG = {
     cdnUrl: 'https://usis-cdn.eniamza.com/connect.json',
     semesters: [
       {
+        id: 'fall25',
+        name: 'Fall 2025',
+        file: 'fall-25.json',
+        year: '2025',
+        dataFormat: 'fall25',
+        isCurrent: true
+      },
+      {
         id: 'summer25',
         name: 'Summer 2025',
         file: 'summer-25.json',
         year: '2025',
         dataFormat: 'spring25',
-        isCurrent: true
+        isCurrent: false
       },
       {
         id: 'spring',
