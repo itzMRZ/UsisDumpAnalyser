@@ -1,4 +1,4 @@
-# Connect Dump Analyser V1.2
+# Connect Dump Analyser V1.5
 
 A modern, mobile-friendly web portal for exploring and analyzing course dumps from USIS. Designed for students and faculty to quickly view, search, and compare course offerings across semesters.
 
