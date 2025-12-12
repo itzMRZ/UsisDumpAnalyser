@@ -66,27 +66,27 @@ const CONFIG = {
     expirationMinutes: 60 // Cache data for 60 minutes
   },
 
-  // UI Status messages
+  // UI Status messages - Seamless integration
   statusMessages: {
     loading: {
-      text: '⏳ Loading semester data...',
-      bgColor: '#e2e3e5',
-      textColor: '#383d41'
+      text: 'Loading data...',
+      bgColor: 'transparent',
+      textColor: 'inherit'
     },
     liveData: {
-      text: '🟢 Live Data: Connected to CDN',
-      bgColor: '#d4edda',
-      textColor: '#155724'
+      text: '● Live',
+      bgColor: '#dcfce7',
+      textColor: '#16a34a'
     },
     offlineData: {
-      text: '🔴 Offline Data: Loaded from Local File',
-      bgColor: '#f8d7da',
-      textColor: '#721c24'
+      text: '● Offline',
+      bgColor: '#fee2e2',
+      textColor: '#dc2626'
     },
     localData: {
-      text: '🟠 Local Data: {semester} {year} Semester',
-      bgColor: '#fff3cd',
-      textColor: '#856404'
+      text: '● Archive: {semester} {year}',
+      bgColor: '#fff7ed',
+      textColor: '#ea580c'
     }
   }
 };

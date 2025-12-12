@@ -34,22 +34,33 @@
 </head>
 <body>
   <div class="container">
-    <!-- Status container with properly positioned help button -->
-    <div class="status-container">
+    <!-- Header area -->
+    <header class="site-header">
+      <div class="header-top">
+        <label class="theme-switch" aria-label="Toggle dark mode">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider">
+            <span class="sun material-icons">light_mode</span>
+            <span class="moon material-icons">dark_mode</span>
+          </span>
+        </label>
+        <div class="header-title">
+          <h1>Connect Dump Analyser <span class="version-number">v1.6</span></h1>
+          <div class="author-footer">
+            <a href="https://github.com/itzMRZ/" target="_blank" rel="noopener noreferrer">
+              by <i class="bi bi-github github-icon"></i> MRZ
+            </a>
+          </div>
+        </div>
+        <button class="help-button" id="helpButton" aria-label="Help">
+          <span class="material-icons">help_outline</span>
+        </button>
+      </div>
       <div id="data-status" class="data-status"></div>
-      <button class="help-button" id="helpButton" aria-label="Help">
-        <span class="material-icons">help_outline</span>
-      </button>
-    </div>
+    </header>
 
-  <h1>Connect Dump Analyser <span class="version-number">v1.6</span></h1>
-
-    <!-- Author footer with GitHub logo between "-by" and "MRZ" -->
-    <div class="author-footer">
-      <a href="https://github.com/itzMRZ/" target="_blank" rel="noopener noreferrer">
-        by <i class="bi bi-github github-icon"></i> MRZ
-      </a>
-    </div>
+    <!-- Hidden legacy status container for JS compatibility -->
+    <div class="status-container" style="display:none;"></div>
 
     <div class="button-container" id="semesterButtons">
       <!-- Semester buttons will be dynamically generated -->
@@ -72,16 +83,16 @@
         <thead>
           <tr>
             <th>Course Code</th>
-            <th class="sortable" data-sort="section">Section <span class="sort-icon"></span></th>
+            <th class="sortable" data-sort="section">SEC <span class="sort-icon"></span></th>
             <th class="sortable" data-sort="facultyInitial">Faculty <span class="sort-icon"></span></th>
             <th>Faculty Info</th>
             <th class="sortable" data-sort="schedule">Schedule <span class="sort-icon"></span></th>
             <th>Lab Schedule</th>
-            <th>Room</th>
             <th class="sortable" data-sort="available">Available <span class="sort-icon"></span></th>
             <th class="sortable" data-sort="booked">Booked <span class="sort-icon"></span></th>
             <th class="sortable" data-sort="capacity">Capacity <span class="sort-icon"></span></th>
             <th>Exam Date</th>
+            <th>Room</th>
           </tr>
         </thead>
         <tbody id="courseTableBody"></tbody>

@@ -21,7 +21,8 @@ const UIController = {
     helpButton: null,
     infoModal: null,
     closeModalBtn: null,
-    versionNumber: null
+    versionNumber: null,
+    themeToggle: null
   },
 
   // Application state
@@ -58,7 +59,8 @@ const UIController = {
       helpButton: document.getElementById('helpButton'),
       infoModal: document.getElementById('infoModal'),
       closeModalBtn: document.getElementById('closeModal'),
-      versionNumber: document.querySelector('.version-number')
+      versionNumber: document.querySelector('.version-number'),
+      themeToggle: document.getElementById('themeToggle')
     };
 
     this.createSemesterButtons();
@@ -66,6 +68,7 @@ const UIController = {
     this.setupMobileFeatures();
     this.setupZoomControls();
     this.setupHelpModal();
+    this.setupThemeToggle();
     this.initEventListeners();
 
     // Add blinking animation to version number
@@ -311,6 +314,59 @@ const UIController = {
         document.body.style.overflow = '';
       }
     });
+  },
+
+  /**
+   * Set up dark/light theme toggle
+   */
+  setupThemeToggle: function() {
+    if (!this.elements.themeToggle) return;
+
+    // Check for saved theme preference or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Apply initial theme
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      this.elements.themeToggle.checked = true;
+    } else {
+      this.elements.themeToggle.checked = false;
+    }
+
+    // Toggle theme on checkbox change
+    this.elements.themeToggle.addEventListener('change', () => {
+      const isDark = this.elements.themeToggle.checked;
+
+      if (isDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        if (e.matches) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          this.elements.themeToggle.checked = true;
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          this.elements.themeToggle.checked = false;
+        }
+      }
+    });
+  },
+
+  /**
+   * Update theme toggle icon based on current theme (no longer needed but kept for compatibility)
+   * @param {boolean} isDark - Whether dark mode is active
+   */
+  updateThemeIcon: function(isDark) {
+    // Slider handles visual state automatically via CSS
   },
 
   /**
@@ -562,6 +618,21 @@ const UIController = {
           ? course.labSchedule.map(s => `${s.day} ${Utils.formatTime(s.start)}`).join('<br>')
           : '-';
 
+        // Format room with optional lab room in different color
+        let roomHtml = '';
+        const classRoom = course.room || 'TBA';
+        const labRoom = course.labRoom;
+
+        if (classRoom !== 'TBA') {
+          roomHtml = `<span class="class-room">${classRoom}</span>`;
+        } else {
+          roomHtml = `<span class="room-tba">TBA</span>`;
+        }
+
+        if (labRoom && labRoom !== classRoom) {
+          roomHtml += `<br><span class="lab-room">${labRoom}</span>`;
+        }
+
         // All cells are now centered by default in CSS
         row.innerHTML = `
           <td>${course.code || 'N/A'}</td>
@@ -570,11 +641,11 @@ const UIController = {
           <td>${facultyInfo}</td>
           <td>${scheduleHtml}</td>
           <td>${labScheduleHtml}</td>
-          <td>${course.room || 'TBA'}</td>
           <td>${seatInfo[0]}</td>
           <td>${seatInfo[1]}</td>
           <td>${seatInfo[2]}</td>
           <td>${examDateHtml}</td>
+          <td>${roomHtml}</td>
         `;
 
         this.elements.tableBody.appendChild(row);

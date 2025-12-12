@@ -87,7 +87,13 @@ const Utils = {
 
       // Lab Schedule extraction
       let labSchedule = [];
+      let labRoom = null;
+
       if (format === 'spring25') {
+        // New format: extract lab room from labRoomName field
+        if (course.labRoomName) {
+          labRoom = course.labRoomName;
+        }
         if (course.labSchedules && course.labSchedules.length > 0) {
              labSchedule = course.labSchedules.map(s => ({
                 day: s.day.substring(0, 3).toUpperCase(),
@@ -96,7 +102,7 @@ const Utils = {
              }));
         }
       } else {
-        // Old format
+        // Old format: extract lab room from LabSchedule string
         if (course.LabSchedule) {
              const entries = course.LabSchedule.split('\n');
              labSchedule = entries.map(entry => {
@@ -110,6 +116,12 @@ const Utils = {
                 }
                 return null;
              }).filter(Boolean);
+
+             // Extract lab room from LabSchedule (format: "Day(Time-Time-Room)")
+             const labRoomMatch = course.LabSchedule.match(/\d{2}:\d{2} [AP]M-\d{2}:\d{2} [AP]M-(.*?)\)/);
+             if (labRoomMatch && labRoomMatch[1]) {
+               labRoom = labRoomMatch[1];
+             }
         }
       }
 
@@ -122,6 +134,7 @@ const Utils = {
         examDate: examDate,
         seats: seats,
         room: room,
+        labRoom: labRoom,
         labSchedule: labSchedule
       };
     });
