@@ -9,12 +9,19 @@ const CONFIG = {
     cdnUrl: 'https://usis-cdn.eniamza.com/connect.json',
     semesters: [
       {
+        id: 'spring26',
+        name: 'Spring 2026',
+        file: 'spring-26.json',
+        year: '2026',
+        dataFormat: 'spring25',
+        isCurrent: true
+      },
+      {
         id: 'fall25',           // ← Fixed: unique ID
         name: 'Fall 2025',
         file: 'fall-25.json',
         year: '2025',
-        dataFormat: 'spring25',
-        isCurrent: true         // ← Current semester (Fall 25 is current)
+        dataFormat: 'spring25'
       },
       {
         id: 'summer25',         // ← Fixed: matches dataService expectation
@@ -55,7 +62,7 @@ const CONFIG = {
 
   // Cache settings
   cache: {
-    storageKey: 'coursePortalData',
+    storageKey: 'coursePortalData_v2',
     expirationMinutes: 60 // Cache data for 60 minutes
   },
 

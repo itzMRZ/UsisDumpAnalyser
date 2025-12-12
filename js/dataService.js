@@ -168,6 +168,9 @@ const DataService = {
             if (cdnData.data && Array.isArray(cdnData.data)) {
               cdnData = cdnData.data;
               console.log(`📋 Extracted data array from CDN data property, length: ${cdnData.length}`);
+            } else if (cdnData.sections && Array.isArray(cdnData.sections)) {
+              cdnData = cdnData.sections;
+              console.log(`📋 Extracted data array from CDN sections property, length: ${cdnData.length}`);
             } else {
               throw new Error('CDN data is not in the expected format');
             }
@@ -221,6 +224,8 @@ const DataService = {
         let courses;
         if (rawData && rawData.data && Array.isArray(rawData.data)) {
           courses = rawData.data;
+        } else if (rawData && rawData.sections && Array.isArray(rawData.sections)) {
+          courses = rawData.sections;
         } else if (Array.isArray(rawData)) {
           courses = rawData;
         } else {

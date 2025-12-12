@@ -1,11 +1,11 @@
-# Connect Dump Analyser V1.5
+# Connect Dump Analyser V1.6
 
 A modern, mobile-friendly web portal for exploring and analyzing course dumps from USIS. Designed for students and faculty to quickly view, search, and compare course offerings across semesters.
 
 ## Features
 
 - **Live Data**: Always fetches the latest semester data from CDN (with fallback to local file).
-- **Multi-Semester Support**: Instantly switch between Summer 2025, Spring 2025, Fall 2024, and Summer 2024.
+- **Multi-Semester Support**: Instantly switch between Spring 2026, Fall 2025, Summer 2025, Spring 2025, Fall 2024, and Summer 2024.
 - **Search**: Real-time, persistent search by course code, faculty, section, or schedule.
 - **Sorting**: Click any table header to sort by that column (ascending/descending).
 - **Responsive UI**: Fully mobile-friendly with horizontal table scrolling and compact design.
@@ -26,10 +26,12 @@ A modern, mobile-friendly web portal for exploring and analyzing course dumps fr
 ## File Structure
 
 ```
-fall-24.json         # Fall 2024 course dump
-spring-25.json       # Spring 2025 course dump
-summer-24.json       # Summer 2024 course dump
+spring-26.json       # Spring 2026 course dump
+fall-25.json         # Fall 2025 course dump
 summer-25.json       # Summer 2025 course dump
+spring-25.json       # Spring 2025 course dump
+fall-24.json         # Fall 2024 course dump
+summer-24.json       # Summer 2024 course dump
 favicon.ico          # Site icon
 index.html           # Main web app
 styles.css           # All styles (responsive)
