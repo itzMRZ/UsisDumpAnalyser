@@ -276,6 +276,9 @@ const DataService = {
       roomMatches: []
     };
 
+    const matchFaculties = new Set();
+    const rawRoomMatches = [];
+
     // Check all semesters for matches
     for (const semId of Object.keys(this._semesterData)) {
       if (!this._semesterData[semId]) continue;
@@ -290,6 +293,7 @@ const DataService = {
               semester: semId,
               schedule: prevCourse.schedule
             });
+            matchFaculties.add(prevCourse.facultyInitial);
           }
         }
 
@@ -308,19 +312,26 @@ const DataService = {
             semester: semId,
             schedule: prevCourse.schedule
           });
+          matchFaculties.add(prevCourse.facultyInitial);
         }
 
-        // Check for room matches (only based on course code)
-        if (prevCourse.code === course.code && prevCourse.room && prevCourse.room !== 'TBA') {
-          matches.roomMatches.push({
+        // Check for room matches (Same Code + Same Room)
+        if (prevCourse.code === course.code &&
+            prevCourse.room === course.room &&
+            prevCourse.facultyInitial !== 'TBA') {
+
+          rawRoomMatches.push({
+            faculty: prevCourse.facultyInitial,
             room: prevCourse.room,
             section: prevCourse.section,
-            semester: semId,
-            faculty: prevCourse.facultyInitial
+            semester: semId
           });
         }
       });
     }
+
+    // Filter Room Matches: Only include if faculty is also in Time or Section matches
+    matches.roomMatches = rawRoomMatches.filter(m => matchFaculties.has(m.faculty));
 
     return matches;
   },

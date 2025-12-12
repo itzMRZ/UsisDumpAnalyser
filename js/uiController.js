@@ -507,6 +507,12 @@ const UIController = {
         // Handle TBA faculty with potential matches
         if (course.faculty === 'TBA') {
           const matches = DataService.findMatches(course);
+
+          // Only show room matches if the current room is TBA
+          if (course.room !== 'TBA') {
+            matches.roomMatches = [];
+          }
+
           facultyInfo = this.buildMatchInfo(matches);
         }
 
@@ -551,6 +557,11 @@ const UIController = {
           }
         }
 
+        // Format lab schedule
+        const labScheduleHtml = course.labSchedule && Array.isArray(course.labSchedule) && course.labSchedule.length > 0
+          ? course.labSchedule.map(s => `${s.day} ${Utils.formatTime(s.start)}`).join('<br>')
+          : '-';
+
         // All cells are now centered by default in CSS
         row.innerHTML = `
           <td>${course.code || 'N/A'}</td>
@@ -558,6 +569,8 @@ const UIController = {
           <td>${course.faculty !== 'TBA' ? course.facultyInitial : 'TBA'}</td>
           <td>${facultyInfo}</td>
           <td>${scheduleHtml}</td>
+          <td>${labScheduleHtml}</td>
+          <td>${course.room || 'TBA'}</td>
           <td>${seatInfo[0]}</td>
           <td>${seatInfo[1]}</td>
           <td>${seatInfo[2]}</td>
@@ -570,7 +583,7 @@ const UIController = {
       console.error('Error rendering table:', error);
       this.elements.tableBody.innerHTML = `
         <tr>
-          <td colspan="9">Error rendering course data: ${error.message}</td>
+          <td colspan="11">Error rendering course data: ${error.message}</td>
         </tr>
       `;
     }
@@ -729,21 +742,21 @@ const UIController = {
 
     // Room matches
     if (matches.roomMatches && matches.roomMatches.length > 0) {
-      const uniqueRooms = [];
-      const seenRooms = new Set();
+      const uniqueFaculty = [];
+      const seenFaculty = new Set();
 
       matches.roomMatches.forEach(match => {
-        if (!seenRooms.has(match.room)) {
-          uniqueRooms.push(match);
-          seenRooms.add(match.room);
+        if (!seenFaculty.has(match.faculty)) {
+          uniqueFaculty.push(match);
+          seenFaculty.add(match.faculty);
         }
       });
 
       html += `
         <div class="semester-group">
           <div class="room-match">
-            Room Match:
-            ${uniqueRooms.map(match => {
+            Room Match (Verified):
+            ${uniqueFaculty.map(match => {
               // Determine correct year tag based on semester
               const semConfig = DataService.getSemesterConfig(match.semester);
               const year = semConfig ? semConfig.year : '?';
@@ -754,7 +767,7 @@ const UIController = {
 
               return `
               <div>
-                <span class="room-number">${match.room}</span>
+                ${match.faculty}
                 <span class="semester-tag">${semesterName}-${year}</span>
               </div>
               `;

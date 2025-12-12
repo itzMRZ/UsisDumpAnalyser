@@ -63,9 +63,55 @@ const Utils = {
       }
 
       // Extract room information
-      const room = format === 'spring25'
-        ? this.extractRoomInfo(course.sectionSchedule?.classSchedules)
-        : (course.roomNo || 'TBA');
+      let room = 'TBA';
+      if (format === 'spring25') {
+        room = course.roomName || course.roomNumber || this.extractRoomInfo(course.sectionSchedule?.classSchedules);
+      } else {
+        // Old format: extract from classSchedule
+        // Example: "Tuesday(02:00 PM-03:20 PM-12H-36C)"
+        if (course.classSchedule) {
+           // Look for pattern: Time-Time-Room)
+           // Matches: 02:00 PM-03:20 PM-12H-36C
+           const matches = course.classSchedule.match(/\d{2}:\d{2} [AP]M-\d{2}:\d{2} [AP]M-(.*?)\)/);
+           if (matches && matches[1]) {
+             room = matches[1];
+           } else {
+             // Fallback for simple room codes like UB20201
+             const simpleMatch = course.classSchedule.match(/-([A-Z0-9]+-[A-Z0-9]+)\)/);
+             if (simpleMatch && simpleMatch[1]) {
+                room = simpleMatch[1];
+             }
+           }
+        }
+      }
+
+      // Lab Schedule extraction
+      let labSchedule = [];
+      if (format === 'spring25') {
+        if (course.labSchedules && course.labSchedules.length > 0) {
+             labSchedule = course.labSchedules.map(s => ({
+                day: s.day.substring(0, 3).toUpperCase(),
+                start: this.timeToMinutes(s.startTime),
+                end: this.timeToMinutes(s.endTime)
+             }));
+        }
+      } else {
+        // Old format
+        if (course.LabSchedule) {
+             const entries = course.LabSchedule.split('\n');
+             labSchedule = entries.map(entry => {
+                const match = entry.match(/(\w+)\((\d+:\d+ [AP]M)-(\d+:\d+ [AP]M)/i);
+                if (match) {
+                    return {
+                        day: match[1].substring(0, 3).toUpperCase(),
+                        start: this.timeToMinutes(match[2]),
+                        end: this.timeToMinutes(match[3])
+                    };
+                }
+                return null;
+             }).filter(Boolean);
+        }
+      }
 
       return {
         code: course.courseCode,
@@ -75,7 +121,8 @@ const Utils = {
         schedule: this.getComparableSchedule(course, format),
         examDate: examDate,
         seats: seats,
-        room: room
+        room: room,
+        labSchedule: labSchedule
       };
     });
   },
