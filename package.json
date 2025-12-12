@@ -1,0 +1,26 @@
+{
+  "name": "primary",
+  "version": "1.0.0",
+  "description": "A modern, mobile-friendly web portal for exploring and analyzing course dumps from USIS. Designed for students and faculty to quickly view, search, and compare course offerings across semesters.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itzMRZ/UsisDumpAnalyser.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itzMRZ/UsisDumpAnalyser/issues"
+  },
+  "homepage": "https://github.com/itzMRZ/UsisDumpAnalyser#readme",
+  "dependencies": {
+    "@vercel/analytics": "^1.6.1"
+  }
+}
