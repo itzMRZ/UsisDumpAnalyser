@@ -56,7 +56,6 @@
           <span class="material-icons">help_outline</span>
         </button>
       </div>
-      <div id="data-status" class="data-status"></div>
     </header>
 
     <!-- Hidden legacy status container for JS compatibility -->
@@ -65,10 +64,13 @@
     <div class="button-container" id="semesterButtons">
       <!-- Semester buttons will be dynamically generated -->
     </div>
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Search by Course Code, Faculty, or Name...">
-      <span class="search-icon material-icons">search</span>
-      <button id="clearSearch" class="clear-search" aria-label="Clear search">×</button>
+    <div class="search-status-wrapper">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by Course Code, Faculty, or Name...">
+        <span class="search-icon material-icons">search</span>
+        <button id="clearSearch" class="clear-search" aria-label="Clear search">×</button>
+      </div>
+      <div id="data-status" class="data-status"></div>
     </div>
 
     <!-- Mobile pagination with page numbers -->

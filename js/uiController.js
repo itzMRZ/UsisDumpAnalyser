@@ -169,33 +169,35 @@ const UIController = {
   setupZoomControls: function() {
     if (!this.elements.zoomIn || !this.elements.zoomOut || !this.elements.tableContainer) return;
 
-    // Set initial state to normal
-    this.zoomState.level = 'normal';
+    // Zoom levels: 1=smallest, 5=largest
+    this.zoomState.level = 3; // Start at middle (normal)
+    const maxLevel = 5;
+    const minLevel = 1;
+
+    const updateZoom = () => {
+      // Remove all zoom classes
+      this.elements.tableContainer.classList.remove('zoom-1', 'zoom-2', 'zoom-3', 'zoom-4', 'zoom-5');
+      // Add current level class
+      this.elements.tableContainer.classList.add(`zoom-${this.zoomState.level}`);
+    };
+
+    // Initial zoom
+    updateZoom();
 
     // Zoom in button click handler
     this.elements.zoomIn.addEventListener('click', () => {
-      // If already zoomed in, do nothing
-      if (this.zoomState.level === 'zoomed-in') return;
-
-      // Remove all zoom classes
-      this.elements.tableContainer.classList.remove('zoomed-out', 'normal');
-
-      // Add zoomed-in class
-      this.elements.tableContainer.classList.add('zoomed-in');
-      this.zoomState.level = 'zoomed-in';
+      if (this.zoomState.level < maxLevel) {
+        this.zoomState.level++;
+        updateZoom();
+      }
     });
 
     // Zoom out button click handler
     this.elements.zoomOut.addEventListener('click', () => {
-      // If already zoomed out, do nothing
-      if (this.zoomState.level === 'zoomed-out') return;
-
-      // Remove all zoom classes
-      this.elements.tableContainer.classList.remove('zoomed-in', 'normal');
-
-      // Add zoomed-out class
-      this.elements.tableContainer.classList.add('zoomed-out');
-      this.zoomState.level = 'zoomed-out';
+      if (this.zoomState.level > minLevel) {
+        this.zoomState.level--;
+        updateZoom();
+      }
     });
 
     // Double-tap handler to reset zoom
@@ -206,10 +208,9 @@ const UIController = {
 
       // If double tap detected (tap within 300ms of last tap)
       if (tapLength < 300 && tapLength > 0) {
-        // Reset to normal zoom
-        this.elements.tableContainer.classList.remove('zoomed-in', 'zoomed-out');
-        this.elements.tableContainer.classList.add('normal');
-        this.zoomState.level = 'normal';
+        // Reset to normal zoom (level 3)
+        this.zoomState.level = 3;
+        updateZoom();
 
         // Prevent default behavior
         e.preventDefault();
