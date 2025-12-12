@@ -144,7 +144,7 @@ body {
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
@@ -154,13 +154,12 @@ h1 {
 }
 
 .version-number {
-  font-size: 0.6rem;
-  color: var(--accent-primary);
-  font-weight: 600;
-  background: var(--bg-tertiary);
-  padding: 2px 7px;
+  font-size: 0.65rem;
+  color: #fff;
+  font-weight: 700;
+  background: var(--accent-primary);
+  padding: 3px 8px;
   border-radius: 4px;
-  border: 1px solid var(--border-color);
   vertical-align: middle;
 }
 
