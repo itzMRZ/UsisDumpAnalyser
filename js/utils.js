@@ -48,17 +48,17 @@ const Utils = {
       if (format !== 'spring25') {
         if (course.defaultSeatCapacity && course.totalFillupSeat && course.availableSeat) {
           seats = {
-            available: parseInt(course.availableSeat),
-            booked: parseInt(course.totalFillupSeat),
-            capacity: parseInt(course.defaultSeatCapacity)
+            available: Number.parseInt(course.availableSeat),
+            booked: Number.parseInt(course.totalFillupSeat),
+            capacity: Number.parseInt(course.defaultSeatCapacity)
           };
         }
       } else {
         seats = {
-          available: parseInt(course.capacity || 0) - parseInt(course.consumedSeat || 0),
-          booked: parseInt(course.consumedSeat || 0),
-          capacity: parseInt(course.capacity || 0),
-          waitlist: parseInt(course.waitlistSeats || 0)
+          available: Number.parseInt(course.capacity || 0) - Number.parseInt(course.consumedSeat || 0),
+          booked: Number.parseInt(course.consumedSeat || 0),
+          capacity: Number.parseInt(course.capacity || 0),
+          waitlist: Number.parseInt(course.waitlistSeats || 0)
         };
       }
 

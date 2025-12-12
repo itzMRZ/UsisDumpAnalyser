@@ -421,7 +421,7 @@ const DataService = {
         }
 
         // Numeric sort if both are numbers
-        if (!isNaN(valA) && !isNaN(valB)) {
+        if (!Number.isNaN(valA) && !Number.isNaN(valB)) {
           const numCompare = direction === 'asc' ? valA - valB : valB - valA;
           if (numCompare !== 0) return numCompare;
         } else {

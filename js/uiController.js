@@ -203,7 +203,7 @@ const UIController = {
     // Double-tap handler to reset zoom
     let lastTap = 0;
     this.elements.tableContainer.addEventListener('touchend', (e) => {
-      const currentTime = new Date().getTime();
+      const currentTime = Date.now();
       const tapLength = currentTime - lastTap;
 
       // If double tap detected (tap within 300ms of last tap)
@@ -271,8 +271,8 @@ const UIController = {
     if (this.elements.pageNumbers) {
       this.elements.pageNumbers.addEventListener('click', (e) => {
         if (e.target.classList.contains('page-number')) {
-          const pageNum = parseInt(e.target.textContent);
-          if (!isNaN(pageNum)) {
+          const pageNum = Number.parseInt(e.target.textContent);
+          if (!Number.isNaN(pageNum)) {
             this.goToPage(pageNum);
           }
         }
@@ -588,7 +588,7 @@ const UIController = {
             let timeStr = dateParts.length > 1 ? dateParts[1] : ''; // Time part
 
             // Format date as DD/MM/YYYY if it contains numbers and slashes or dashes
-            if (/[\d\/\-]/.test(dateStr)) {
+            if (/[\d/-]/.test(dateStr)) {
               // Split by any common date delimiter
               const parts = dateStr.split(/[\/\-\.]/);
               if (parts.length === 3) {
