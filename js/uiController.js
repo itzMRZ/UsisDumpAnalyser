@@ -376,9 +376,24 @@ const UIController = {
   initEventListeners: function() {
     // Sorting headers
     document.querySelectorAll('th.sortable').forEach(th => {
+      // Accessibility + UX: make headers keyboard-activatable
+      th.setAttribute('role', 'button');
+      th.setAttribute('tabindex', '0');
+      const labelText = (th.childNodes[0]?.textContent || th.textContent || '').trim();
+      th.setAttribute('aria-label', `Sort by ${labelText}`);
+      th.setAttribute('title', `Sort by ${labelText}`);
+
       th.addEventListener('click', (e) => {
         const key = th.getAttribute('data-sort');
         this.handleSort(key);
+      });
+
+      th.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const key = th.getAttribute('data-sort');
+          this.handleSort(key);
+        }
       });
     });
   },
@@ -571,6 +586,9 @@ const UIController = {
           }
 
           facultyInfo = this.buildMatchInfo(matches);
+        } else {
+          // Keep match info left-aligned, but center the normal (non-TBA) faculty name
+          facultyInfo = `<div class="faculty-info-normal">${course.faculty || 'N/A'}</div>`;
         }
 
         // Ensure schedule data exists before accessing it

@@ -372,6 +372,59 @@ const DataService = {
     // For debugging
     console.log('DataService.sortData called with:', key, direction);
 
+    const normalizeString = (value) => String(value ?? '').trim();
+    const isTbaValue = (value) => {
+      const v = normalizeString(value).toUpperCase();
+      return v === '' || v === 'TBA';
+    };
+
+    const dayOrder = {
+      MON: 1,
+      TUE: 2,
+      WED: 3,
+      THU: 4,
+      FRI: 5,
+      SAT: 6,
+      SUN: 7
+    };
+
+    const getFacultySortKey = (course) => {
+      const raw = normalizeString(course?.facultyInitial);
+      return {
+        isTba: isTbaValue(raw),
+        value: raw.toUpperCase()
+      };
+    };
+
+    const getScheduleSortKey = (course) => {
+      const schedule = Array.isArray(course?.schedule) ? course.schedule : [];
+      if (schedule.length === 0) {
+        return { isTba: true, day: 99, start: Number.MAX_SAFE_INTEGER };
+      }
+
+      let best = null;
+      for (const entry of schedule) {
+        if (!entry || !entry.day) continue;
+        const dayKey = normalizeString(entry.day).substring(0, 3).toUpperCase();
+        const day = dayOrder[dayKey] ?? 90;
+        const start = (typeof entry.start === 'number' && Number.isFinite(entry.start))
+          ? entry.start
+          : Number.MAX_SAFE_INTEGER;
+        const candidate = { isTba: false, day, start };
+
+        if (!best) {
+          best = candidate;
+          continue;
+        }
+
+        if (candidate.day < best.day || (candidate.day === best.day && candidate.start < best.start)) {
+          best = candidate;
+        }
+      }
+
+      return best || { isTba: true, day: 99, start: Number.MAX_SAFE_INTEGER };
+    };
+
     // Make a fresh copy of the data to ensure sorting works every time
     const data = [...this._state.filteredData];
 
@@ -391,13 +444,32 @@ const DataService = {
         // Special handling for different data types
         switch(key) {
           case 'facultyInitial':
-            valA = a.facultyInitial || '';
-            valB = b.facultyInitial || '';
+            {
+              const fa = getFacultySortKey(a);
+              const fb = getFacultySortKey(b);
+
+              // Keep TBA at the bottom regardless of direction
+              if (fa.isTba !== fb.isTba) return fa.isTba ? 1 : -1;
+
+              const facultyCompare = fa.value.localeCompare(fb.value);
+              if (facultyCompare !== 0) return direction === 'asc' ? facultyCompare : -facultyCompare;
+            }
             break;
 
           case 'schedule':
-            valA = a.schedule?.[0] ? `${a.schedule[0].day} ${a.schedule[0].start}` : '';
-            valB = b.schedule?.[0] ? `${b.schedule[0].day} ${b.schedule[0].start}` : '';
+            {
+              const sa = getScheduleSortKey(a);
+              const sb = getScheduleSortKey(b);
+
+              // Keep TBA at the bottom regardless of direction
+              if (sa.isTba !== sb.isTba) return sa.isTba ? 1 : -1;
+
+              const dayCompare = sa.day - sb.day;
+              if (dayCompare !== 0) return direction === 'asc' ? dayCompare : -dayCompare;
+
+              const startCompare = sa.start - sb.start;
+              if (startCompare !== 0) return direction === 'asc' ? startCompare : -startCompare;
+            }
             break;
 
           case 'available':
@@ -420,15 +492,17 @@ const DataService = {
             valB = b[key];
         }
 
-        // Numeric sort if both are numbers
-        if (!Number.isNaN(valA) && !Number.isNaN(valB)) {
+        // Numeric sort only when both are actually numbers
+        if (typeof valA === 'number' && typeof valB === 'number' && Number.isFinite(valA) && Number.isFinite(valB)) {
           const numCompare = direction === 'asc' ? valA - valB : valB - valA;
           if (numCompare !== 0) return numCompare;
         } else {
           // String sort
+          const strA = normalizeString(valA);
+          const strB = normalizeString(valB);
           const strCompare = direction === 'asc'
-            ? String(valA || '').localeCompare(String(valB || ''))
-            : String(valB || '').localeCompare(String(valA || ''));
+            ? strA.localeCompare(strB)
+            : strB.localeCompare(strA);
           if (strCompare !== 0) return strCompare;
         }
       }
