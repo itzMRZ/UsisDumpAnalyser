@@ -278,6 +278,28 @@ const UIController = {
         }
       });
     }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Focus search on '/' or Ctrl+K (Cmd+K)
+      if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) &&
+          document.activeElement !== this.elements.searchInput) {
+
+        // Don't trigger if user is typing in another input (if any existed)
+        if (document.activeElement.tagName === 'INPUT' ||
+            document.activeElement.tagName === 'TEXTAREA') {
+          return;
+        }
+
+        e.preventDefault();
+        this.elements.searchInput.focus();
+      }
+
+      // Clear search on Escape
+      if (e.key === 'Escape' && document.activeElement === this.elements.searchInput) {
+        this.elements.searchInput.blur();
+      }
+    });
   },
 
   /**
