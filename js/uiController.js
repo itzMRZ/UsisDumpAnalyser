@@ -295,7 +295,7 @@ const UIController = {
         this.elements.searchInput.focus();
       }
 
-      // Clear search on Escape
+      // Unfocus search input on Escape
       if (e.key === 'Escape' && document.activeElement === this.elements.searchInput) {
         this.elements.searchInput.blur();
       }
