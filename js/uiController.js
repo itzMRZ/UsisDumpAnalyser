@@ -281,6 +281,9 @@ const UIController = {
 
     // Keyboard Shortcuts
     document.addEventListener('keydown', (e) => {
+      // Guard clause if search input doesn't exist
+      if (!this.elements.searchInput) return;
+
       // Focus search on '/' or Ctrl+K (Cmd+K)
       if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) &&
           document.activeElement !== this.elements.searchInput) {
@@ -295,7 +298,7 @@ const UIController = {
         this.elements.searchInput.focus();
       }
 
-      // Unfocus search input on Escape
+      // Remove focus from search on Escape
       if (e.key === 'Escape' && document.activeElement === this.elements.searchInput) {
         this.elements.searchInput.blur();
       }
