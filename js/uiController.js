@@ -69,6 +69,7 @@ const UIController = {
     this.setupZoomControls();
     this.setupHelpModal();
     this.setupThemeToggle();
+    this.setupKeyboardShortcuts();
     this.initEventListeners();
 
     // Add blinking animation to version number
@@ -368,6 +369,26 @@ const UIController = {
    */
   updateThemeIcon: function(isDark) {
     // Slider handles visual state automatically via CSS
+  },
+
+  /**
+   * Set up global keyboard shortcuts
+   */
+  setupKeyboardShortcuts: function() {
+    document.addEventListener('keydown', (e) => {
+      // Press '/' to focus search
+      // Ensure we don't trigger if user is holding modifiers or already in an input
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // Don't interfere if user is already typing in an input/textarea
+        const tag = document.activeElement.tagName.toLowerCase();
+        if (tag !== 'input' && tag !== 'textarea' && document.activeElement.isContentEditable !== true) {
+          e.preventDefault(); // Prevent the '/' character from being typed into the search box if it focuses immediately
+          if (this.elements.searchInput) {
+            this.elements.searchInput.focus();
+          }
+        }
+      }
+    });
   },
 
   /**
