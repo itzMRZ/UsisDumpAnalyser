@@ -1,7 +1,7 @@
 # Connect Dump Analyser V1.6
 
 A modern, mobile-friendly web portal for exploring and analyzing course dumps from USIS. Designed for students and faculty to quickly view, search, and compare course offerings across semesters.
-
+Live Preview : https://connect-dumps.itzmrz.xyz/
 ## Features
 
 - **Live Data**: Always fetches the latest semester data from CDN (with fallback to local file).
