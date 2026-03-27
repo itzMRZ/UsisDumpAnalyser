@@ -145,6 +145,19 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+/* ---------- ACCESSIBILITY UTILITIES ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* ---------- CONTAINER ---------- */
 .container {
   width: 100%;
@@ -449,6 +462,33 @@ h1 {
 
 .clear-search:hover {
   color: var(--accent-danger);
+}
+
+.shortcut-hint {
+  position: absolute;
+  right: 65px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  pointer-events: none;
+  transition: opacity 0.2s;
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .shortcut-hint {
+    display: block;
+  }
+}
+
+#searchInput:focus ~ .shortcut-hint,
+#searchInput:not(:placeholder-shown) ~ .shortcut-hint {
+  display: none;
 }
 
 /* ---------- TABLE WRAPPER ---------- */
