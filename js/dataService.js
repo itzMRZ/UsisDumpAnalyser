@@ -182,6 +182,9 @@ const DataService = {
           data = Utils.normalizeCourseData(cdnData, semester.dataFormat);
           console.log(`✅ Data normalized from CDN, final count: ${data.length}`);
 
+          // Sort by course code (same as local-file path)
+          data.sort((a, b) => a.code.localeCompare(b.code));
+
           // Set status to live data
           UIController.updateDataStatus('liveData');
 
@@ -236,14 +239,10 @@ const DataService = {
         data = Utils.normalizeCourseData(courses, semester.dataFormat);
         console.log(`✅ Normalized data for ${semester.file}: ${data.length} courses`);
 
-        // Set appropriate status based on whether this was a fallback or primary load
+        // Only update the status badge for the current semester;
+        // past semesters are preloaded in parallel and must not race to overwrite it.
         if (semester.isCurrent) {
           UIController.updateDataStatus('offlineData');
-        } else {
-          UIController.updateDataStatus('localData', {
-            semester: semester.name.split(' ')[0],
-            year: semester.year
-          });
         }
 
         console.log(`🔢 Loaded ${data?.length || 0} courses from local file for ${semester.id}`);

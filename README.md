@@ -1,63 +1,116 @@
-# Connect Dump Analyser V1.6
+# Connect Dump Analyser
 
-A modern, mobile-friendly web portal for exploring and analyzing course dumps from USIS. Designed for students and faculty to quickly view, search, and compare course offerings across semesters.
-Live Preview : https://connect-dumps.itzmrz.xyz/
+> Browse, search, and compare BRAC University course section data exported from USIS (Connect).
+
+**Live:** <https://connect-dumps.itzmrz.xyz/>
+
+---
+
 ## Features
 
-- **Live Data**: Always fetches the latest semester data from CDN (with fallback to local file).
-- **Multi-Semester Support**: Instantly switch between Spring 2026, Fall 2025, Summer 2025, Spring 2025, Fall 2024, and Summer 2024.
-- **Search**: Real-time, persistent search by course code, faculty, section, or schedule.
-- **Sorting**: Click any table header to sort by that column (ascending/descending).
-- **Responsive UI**: Fully mobile-friendly with horizontal table scrolling and compact design.
-- **Faculty Match**: Shows potential faculty for TBA sections based on previous semesters.
-- **Pagination**: Fast navigation for large course lists.
-- **Status Indicators**: Clear data source status (Live, Local, Offline).
-- **Dark Purple Highlight**: Current semester button is highlighted in purple.
+| Feature | Description |
+| --- | --- |
+| Live data | Current semester fetched from CDN; falls back to bundled archive automatically |
+| Multi-semester | Switch between Fall 2026, Spring 2026, Fall 2025, Summer 2025, Spring 2025, Fall 2024, Summer 2024 |
+| Search | Real-time filter by course code, faculty name/initial, section, or schedule |
+| Sort | Click any column header to sort ascending / descending |
+| Faculty prediction | Suggests probable faculty for TBA sections based on historical data |
+| Pagination | 50 rows per page with numbered navigation |
+| Dark mode | System-aware toggle; preference persisted in `localStorage` |
+| Responsive | Mobile-friendly with horizontal scroll and table zoom controls |
+
+---
 
 ## Usage
 
-1. **Open `index.html` in your browser** (no server required).
-2. Use the semester buttons to switch between available dumps.
-3. Use the search bar to filter courses. The search persists when switching semesters.
-4. Click any table header to sort by that column. Click again to reverse the order.
-5. Use the pagination arrows to navigate between pages.
-6. On mobile, scroll the table horizontally to see all columns.
+1. Open `index.html` directly in a browser — no server or build step required.
+2. Click a semester button to switch datasets. The current semester loads automatically.
+3. Type in the search bar to filter rows. Search persists when switching semesters.
+4. Click a column header to sort; click again to reverse.
+5. Use `+` / `−` zoom buttons on mobile to adjust table scale.
+
+---
 
 ## File Structure
 
-```
-spring-26.json       # Spring 2026 course dump
-fall-25.json         # Fall 2025 course dump
-summer-25.json       # Summer 2025 course dump
-spring-25.json       # Spring 2025 course dump
-fall-24.json         # Fall 2024 course dump
-summer-24.json       # Summer 2024 course dump
-favicon.ico          # Site icon
-index.html           # Main web app
-styles.css           # All styles (responsive)
-README.md            # This file
+```text
+index.html              Entry point
+styles.css              All styles (responsive, dark mode via CSS variables)
+favicon.ico
+img.png                 Open Graph preview image
+data/
+  fall-26.json          Fall 2026 course dump   ← current
+  spring-26.json        Spring 2026
+  fall-25.json          Fall 2025
+  summer-25.json        Summer 2025
+  spring-25.json        Spring 2025
+  fall-24.json          Fall 2024
+  summer-24.json        Summer 2024
+backups/                Point-in-time snapshots (not loaded by the app)
 js/
-  app.js             # App entry point
-  config.js          # Configuration (semesters, CDN, etc.)
-  dataService.js     # Data loading, caching, sorting
-  uiController.js    # UI logic, event handling
-  utils.js           # Utility functions
+  config.js             Semester list, CDN URL, cache & pagination settings
+  utils.js              Data normalisation, time helpers, localStorage cache
+  dataService.js        Fetching, caching, and state management
+  uiController.js       DOM wiring, rendering, event handling
+  app.js                Entry point — initialises modules in order
+docs/
+  debug-extras.md       Developer debugging notes
+.github/
+  copilot-instructions.md   AI assistant context for this repo
 ```
+
+---
+
+## Adding a New Semester
+
+1. Place the JSON dump in `data/` (e.g. `data/summer-26.json`).
+2. Add an entry to `CONFIG.dataSources.semesters` in `js/config.js`.
+3. Set `isCurrent: false` on the entry that was previously current.
+4. No other changes required — semester buttons are generated dynamically.
+
+Example:
+
+```js
+{
+  id: 'summer26',
+  name: 'Summer 2026',
+  file: 'data/summer-26.json',
+  year: '2026',
+  dataFormat: 'spring25', // use 'old' for pre-Spring-2025 dumps
+  isCurrent: true         // set false on the previously current entry
+}
+```
+
+---
 
 ## Development
 
-- **Edit `js/` files** for logic/UI changes.
-- **Edit `styles.css`** for design tweaks.
-- **Add new semesters** by updating `config.js` and adding the JSON file.
-- **No build step required** – just open `index.html`.
+- All logic lives in `js/`. No framework, no bundler, no `npm`.
+- `CONFIG.debug = true` enables verbose console output.
+- To add an external resource, also whitelist it in the `Content-Security-Policy` meta tag in `index.html`.
 
-## Contribution
+---
 
-Pull requests and suggestions are welcome! Please:
-- Use clear commit messages
-- Follow the existing code style
-- Test on both desktop and mobile
+## Automation
+
+- `.github/workflows/update-active-semester.yml` runs once per day on a cron schedule and can also be triggered manually.
+- `scripts/update-active-semester.mjs` fetches the CDN dump and refreshes the active archive in `data/`.
+- A new semester is detected when any sentinel course section in `ENG101:01`, `MAT110:01`, or `CSE110:01` has a `midExamDate` shift greater than 10 days.
+- When that happens, the workflow writes a new `data/<semester>.json`, promotes it to `isCurrent: true` in `js/config.js`, and commits the change automatically.
+- The term progression is controlled by `TERM_SEQUENCE` in the workflow. It is currently set to `spring,fall,summer` to match the requested rule and can be changed without editing the script.
+
+---
+
+## Contributing
+
+Pull requests and issues are welcome.
+
+- Write clear commit messages.
+- Follow the existing vanilla-JS style (no modules, no transpilation).
+- Test on both desktop and a mobile viewport before opening a PR.
+
+---
 
 ## License
 
-MIT License
+[MIT](LICENSE)

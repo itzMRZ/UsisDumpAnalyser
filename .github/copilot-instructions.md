@@ -15,6 +15,8 @@ All JS is loaded as plain `<script>` tags in `index.html`. Modules communicate t
 ```
 index.html          Entry point / markup / table skeleton
 styles.css          All styles (responsive, dark mode via CSS vars)
+data/               Semester JSON dumps (loaded by the app at runtime)
+backups/            Point-in-time .bak snapshots (not loaded by the app)
 js/
   config.js         CONFIG global — semesters list, CDN URL, pagination, cache settings
   utils.js          Utils global — data normalisation, cache helpers, time helpers
@@ -61,15 +63,15 @@ Always check `semester.dataFormat` in `config.js` before touching normalisation 
 
 ## Adding a new semester
 
-1. Drop the JSON dump in the repo root (e.g. `fall-26.json`).
+1. Place the JSON dump in `data/` (e.g. `data/summer-26.json`).
 2. Add an entry to `CONFIG.dataSources.semesters` in `js/config.js`:
    ```js
    {
-     id: 'fall26',
-     name: 'Fall 2026',
-     file: 'fall-26.json',
+     id: 'summer26',
+     name: 'Summer 2026',
+     file: 'data/summer-26.json',
      year: '2026',
-     dataFormat: 'spring25',   // or 'old' for pre-2025 dumps
+     dataFormat: 'spring25',   // or 'old' for pre-Spring-2025 dumps
      isCurrent: true           // only ONE semester should be isCurrent
    }
    ```

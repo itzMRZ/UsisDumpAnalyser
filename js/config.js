@@ -11,7 +11,7 @@ const CONFIG = {
       {
         id: 'fall26',
         name: 'Fall 2026',
-        file: 'fall-26.json',
+        file: 'data/fall-26.json',
         year: '2026',
         dataFormat: 'spring25',
         isCurrent: true
@@ -19,43 +19,42 @@ const CONFIG = {
       {
         id: 'spring26',
         name: 'Spring 2026',
-        file: 'spring-26.json',
+        file: 'data/spring-26.json',
         year: '2026',
         dataFormat: 'spring25'
       },
       {
-        id: 'fall25',           // ← Fixed: unique ID
+        id: 'fall25',
         name: 'Fall 2025',
-        file: 'fall-25.json',
+        file: 'data/fall-25.json',
         year: '2025',
         dataFormat: 'spring25'
       },
       {
-        id: 'summer25',         // ← Fixed: matches dataService expectation
+        id: 'summer25',
         name: 'Summer 2025',
-        file: 'summer-25.json',
+        file: 'data/summer-25.json',
         year: '2025',
         dataFormat: 'spring25'
-        // Summer 25 is NOT current - it's a past semester
       },
       {
-        id: 'spring25',         // ← Fixed: unique ID
+        id: 'spring25',
         name: 'Spring 2025',
-        file: 'spring-25.json',
+        file: 'data/spring-25.json',
         year: '2025',
         dataFormat: 'spring25'
       },
       {
-        id: 'fall24',           // ← Fixed: unique ID
+        id: 'fall24',
         name: 'Fall 2024',
-        file: 'fall-24.json',
+        file: 'data/fall-24.json',
         year: '2024',
         dataFormat: 'old'
       },
       {
-        id: 'summer24',         // ← Fixed: unique ID
+        id: 'summer24',
         name: 'Summer 2024',
-        file: 'summer-24.json',
+        file: 'data/summer-24.json',
         year: '2024',
         dataFormat: 'old'
       }
