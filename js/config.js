@@ -9,12 +9,19 @@ const CONFIG = {
     cdnUrl: 'https://usis-cdn.eniamza.com/connect.json',
     semesters: [
       {
+        id: 'fall26',
+        name: 'Fall 2026',
+        file: 'fall-26.json',
+        year: '2026',
+        dataFormat: 'spring25',
+        isCurrent: true
+      },
+      {
         id: 'spring26',
         name: 'Spring 2026',
         file: 'spring-26.json',
         year: '2026',
-        dataFormat: 'spring25',
-        isCurrent: true
+        dataFormat: 'spring25'
       },
       {
         id: 'fall25',           // ← Fixed: unique ID
