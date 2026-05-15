@@ -315,7 +315,8 @@ const DataService = {
         }
 
         // Check for room matches (Same Code + Same Room)
-        if (prevCourse.code === course.code &&
+        if (course.room && course.room !== 'TBA' &&
+            prevCourse.code === course.code &&
             prevCourse.room === course.room &&
             prevCourse.facultyInitial !== 'TBA') {
 
@@ -329,8 +330,8 @@ const DataService = {
       });
     }
 
-    // Filter Room Matches: Only include if faculty is also in Time or Section matches
-    matches.roomMatches = rawRoomMatches.filter(m => matchFaculties.has(m.faculty));
+    // Assign Room Matches
+    matches.roomMatches = rawRoomMatches;
 
     return matches;
   },

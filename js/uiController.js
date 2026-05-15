@@ -580,11 +580,6 @@ const UIController = {
         if (course.faculty === 'TBA') {
           const matches = DataService.findMatches(course);
 
-          // Only show room matches if the current room is TBA
-          if (course.room !== 'TBA') {
-            matches.roomMatches = [];
-          }
-
           facultyInfo = this.buildMatchInfo(matches);
         } else {
           // Keep match info left-aligned, but center the normal (non-TBA) faculty name
@@ -763,7 +758,7 @@ const UIController = {
     let html = '<div class="tba-info">TBA';
 
     // Only add "(Potential Faculty)" if we actually have any matches
-    if (matches.sectionHistory.length > 0 || matches.timeMatches.length > 0) {
+    if (matches.sectionHistory.length > 0 || matches.timeMatches.length > 0 || (matches.roomMatches && matches.roomMatches.length > 0)) {
       html += ' (Potential Faculty)';
     }
     html += '</div>';
@@ -845,7 +840,7 @@ const UIController = {
       html += `
         <div class="semester-group">
           <div class="room-match">
-            Room Match (Verified):
+            Room Match Faculty:
             ${uniqueFaculty.map(match => {
               // Determine correct year tag based on semester
               const semConfig = DataService.getSemesterConfig(match.semester);
