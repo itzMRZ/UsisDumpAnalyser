@@ -368,9 +368,6 @@ const DataService = {
    * @param {'asc'|'desc'} direction - Sort direction for the sorting
    */
   sortData: function(key, direction) {
-    // For debugging
-    console.log('DataService.sortData called with:', key, direction);
-
     const normalizeString = (value) => String(value ?? '').trim();
     const isTbaValue = (value) => {
       const v = normalizeString(value).toUpperCase();
