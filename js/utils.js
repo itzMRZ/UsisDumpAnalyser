@@ -23,7 +23,7 @@ const Utils = {
    * @return {string} Escaped string
    */
   escapeHtml: function(str) {
-    if (!str) return '';
+    if (str == null) return '';
     const map = {
       '&': '&amp;',
       '<': '&lt;',

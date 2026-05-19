@@ -673,7 +673,7 @@ const UIController = {
       console.error('Error rendering table:', error);
       this.elements.tableBody.innerHTML = `
         <tr>
-          <td colspan="11">Error rendering course data: ${error.message}</td>
+          <td colspan="11">Error rendering course data: ${Utils.escapeHtml(error.message)}</td>
         </tr>
       `;
     }
