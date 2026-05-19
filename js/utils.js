@@ -18,6 +18,23 @@ const Utils = {
   },
 
   /**
+   * Escapes HTML special characters in a string
+   * @param {string} str - String to escape
+   * @return {string} Escaped string
+   */
+  escapeHtml: function(str) {
+    if (!str) return '';
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return String(str).replace(/[&<>"']/g, m => map[m]);
+  },
+
+  /**
    * Converts minutes since midnight to formatted time string
    * @param {number} minutes - Minutes since midnight
    * @return {string} Formatted time string (e.g., "8:00 AM")
@@ -247,7 +264,7 @@ const Utils = {
     tableBody.innerHTML = `
       <tr>
         <td colspan="9">
-          <div class="error-message">${error.message}</div>
+          <div class="error-message">${this.escapeHtml(error.message)}</div>
         </td>
       </tr>
     `;
