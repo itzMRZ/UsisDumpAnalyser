@@ -100,7 +100,6 @@ const DataService = {
    * @returns {Promise} Promise resolving when all data is loaded
    */
   preloadAllSemesterData: async function() {
-    console.log('🚀 Starting preload for all semesters...');
     const promises = CONFIG.dataSources.semesters.map(semester => {
       console.log(`📋 Queueing preload for semester: ${semester.id} (${semester.name})`);
       return this.loadSemesterData(semester)
