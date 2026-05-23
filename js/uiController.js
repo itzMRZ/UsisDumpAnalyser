@@ -588,7 +588,7 @@ const UIController = {
           facultyInfo = this.buildMatchInfo(matches);
         } else {
           // Keep match info left-aligned, but center the normal (non-TBA) faculty name
-          facultyInfo = `<div class="faculty-info-normal">${course.faculty || 'N/A'}</div>`;
+          facultyInfo = `<div class="faculty-info-normal">${Utils.escapeHtml(course.faculty || 'N/A')}</div>`;
         }
 
         // Ensure schedule data exists before accessing it
@@ -643,20 +643,20 @@ const UIController = {
         const labRoom = course.labRoom;
 
         if (classRoom !== 'TBA') {
-          roomHtml = `<span class="class-room">${classRoom}</span>`;
+          roomHtml = `<span class="class-room">${Utils.escapeHtml(classRoom)}</span>`;
         } else {
           roomHtml = `<span class="room-tba">TBA</span>`;
         }
 
         if (labRoom && labRoom !== classRoom) {
-          roomHtml += `<br><span class="lab-room">${labRoom}</span>`;
+          roomHtml += `<br><span class="lab-room">${Utils.escapeHtml(labRoom)}</span>`;
         }
 
         // All cells are now centered by default in CSS
         row.innerHTML = `
-          <td>${course.code || 'N/A'}</td>
-          <td>${course.section || 'N/A'}</td>
-          <td>${course.faculty !== 'TBA' ? course.facultyInitial : 'TBA'}</td>
+          <td>${Utils.escapeHtml(course.code || 'N/A')}</td>
+          <td>${Utils.escapeHtml(course.section || 'N/A')}</td>
+          <td>${course.faculty !== 'TBA' ? Utils.escapeHtml(course.facultyInitial) : 'TBA'}</td>
           <td>${facultyInfo}</td>
           <td>${scheduleHtml}</td>
           <td>${labScheduleHtml}</td>
@@ -673,7 +673,7 @@ const UIController = {
       console.error('Error rendering table:', error);
       this.elements.tableBody.innerHTML = `
         <tr>
-          <td colspan="11">Error rendering course data: ${error.message}</td>
+          <td colspan="11">Error rendering course data: ${Utils.escapeHtml(error.message)}</td>
         </tr>
       `;
     }
@@ -785,8 +785,8 @@ const UIController = {
 
               return `
               <div>
-                ${m.faculty}
-                <span class="semester-tag">(${semesterName}-${year})</span>
+                ${Utils.escapeHtml(m.faculty)}
+                <span class="semester-tag">(${Utils.escapeHtml(semesterName)}-${Utils.escapeHtml(year)})</span>
               </div>
               `;
             }).join('')}
@@ -821,8 +821,8 @@ const UIController = {
 
               return `
               <div>
-                ${match.faculty}
-                <span class="semester-tag">${semesterName}-${year} Sec ${match.section}</span>
+                ${Utils.escapeHtml(match.faculty)}
+                <span class="semester-tag">${Utils.escapeHtml(semesterName)}-${Utils.escapeHtml(year)} Sec ${Utils.escapeHtml(match.section)}</span>
               </div>
               `;
             }).join('')}
@@ -857,8 +857,8 @@ const UIController = {
 
               return `
               <div>
-                ${match.faculty}
-                <span class="semester-tag">${semesterName}-${year}</span>
+                ${Utils.escapeHtml(match.faculty)}
+                <span class="semester-tag">${Utils.escapeHtml(semesterName)}-${Utils.escapeHtml(year)}</span>
               </div>
               `;
             }).join('')}
@@ -884,10 +884,10 @@ const UIController = {
 
     // Replace template parameters
     if (params.semester) {
-      statusText = statusText.replace('{semester}', params.semester);
+      statusText = statusText.replace('{semester}', Utils.escapeHtml(params.semester));
     }
     if (params.year) {
-      statusText = statusText.replace('{year}', params.year);
+      statusText = statusText.replace('{year}', Utils.escapeHtml(params.year));
     }
 
     // Add loading spinner for loading status
