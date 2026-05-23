@@ -6,6 +6,7 @@ const DataService = {
   // Cache for semester data with metadata
   _semesterData: {},
   _semesterDataSource: {}, // Track whether data came from CDN, local, or cache
+  _pastCoursesByCode: null, // Index of past courses by code
 
   // Current application state
   _state: {
@@ -88,6 +89,7 @@ const DataService = {
     console.log(`📊 Loaded data for ${semesterId}: ${data?.length || 0} courses`);
 
     this._semesterData[semesterId] = data; // Cache it
+    this._pastCoursesByCode = null;
     this._state.currentData = data;
     this._state.filteredData = [...data];
 
@@ -106,6 +108,7 @@ const DataService = {
         .then(data => {
           console.log(`✅ Successfully preloaded ${semester.id}: ${data?.length || 0} courses`);
           this._semesterData[semester.id] = data;
+          this._pastCoursesByCode = null;
           return { id: semester.id, data };
         })
         .catch(error => {
@@ -267,6 +270,38 @@ const DataService = {
    * @param {Object} course - Course object
    * @returns {Object} Object containing section, time, and room matches
    */
+
+  /**
+   * Build an index of past courses grouped by course code for fast lookups
+   */
+  _buildPastCourseIndex: function() {
+    console.log('🏗️ Building past course index...');
+    const startTime = performance.now();
+    this._pastCoursesByCode = {};
+
+    for (const semId of Object.keys(this._semesterData)) {
+      const courses = this._semesterData[semId];
+      if (!courses) continue;
+
+      courses.forEach(course => {
+        if (!this._pastCoursesByCode[course.code]) {
+          this._pastCoursesByCode[course.code] = [];
+        }
+
+        // Only include courses with an actual faculty assigned
+        if (course.facultyInitial !== 'TBA') {
+          this._pastCoursesByCode[course.code].push({
+            course: course,
+            semId: semId
+          });
+        }
+      });
+    }
+
+    const endTime = performance.now();
+    console.log(`✅ Built past course index in ${Math.round(endTime - startTime)}ms`);
+  },
+
   findMatches: function(course) {
     const matches = {
       timeMatches: [],
@@ -277,56 +312,51 @@ const DataService = {
     const matchFaculties = new Set();
     const rawRoomMatches = [];
 
-    // Check all semesters for matches
-    for (const semId of Object.keys(this._semesterData)) {
-      if (!this._semesterData[semId]) continue;
-
-      this._semesterData[semId].forEach(prevCourse => {
-        // Check section history matches
-        if (prevCourse.code === course.code && prevCourse.section === course.section) {
-          // Only add if the previous faculty wasn't TBA
-          if (prevCourse.facultyInitial !== 'TBA') {
-            matches.sectionHistory.push({
-              faculty: prevCourse.facultyInitial,
-              semester: semId,
-              schedule: prevCourse.schedule
-            });
-            matchFaculties.add(prevCourse.facultyInitial);
-          }
-        }
-
-        // Check time overlap matches
-        const hasTimeOverlap = course.schedule.some(courseTime =>
-          prevCourse.schedule.some(prevTime =>
-            courseTime.day === prevTime.day &&
-            Math.abs(courseTime.start - prevTime.start) < 90
-          )
-        );
-
-        if (hasTimeOverlap && prevCourse.facultyInitial !== 'TBA' && prevCourse.code === course.code) {
-          matches.timeMatches.push({
-            faculty: prevCourse.facultyInitial,
-            section: prevCourse.section,
-            semester: semId,
-            schedule: prevCourse.schedule
-          });
-          matchFaculties.add(prevCourse.facultyInitial);
-        }
-
-        // Check for room matches (Same Code + Same Room)
-        if (prevCourse.code === course.code &&
-            prevCourse.room === course.room &&
-            prevCourse.facultyInitial !== 'TBA') {
-
-          rawRoomMatches.push({
-            faculty: prevCourse.facultyInitial,
-            room: prevCourse.room,
-            section: prevCourse.section,
-            semester: semId
-          });
-        }
-      });
+    if (!this._pastCoursesByCode) {
+      this._buildPastCourseIndex();
     }
+
+    const pastCourses = this._pastCoursesByCode[course.code] || [];
+
+    pastCourses.forEach(({ course: prevCourse, semId }) => {
+      // Check section history matches
+      if (prevCourse.section === course.section) {
+        matches.sectionHistory.push({
+          faculty: prevCourse.facultyInitial,
+          semester: semId,
+          schedule: prevCourse.schedule
+        });
+        matchFaculties.add(prevCourse.facultyInitial);
+      }
+
+      // Check time overlap matches
+      const hasTimeOverlap = course.schedule && prevCourse.schedule && course.schedule.some(courseTime =>
+        prevCourse.schedule.some(prevTime =>
+          courseTime.day === prevTime.day &&
+          Math.abs(courseTime.start - prevTime.start) < 90
+        )
+      );
+
+      if (hasTimeOverlap) {
+        matches.timeMatches.push({
+          faculty: prevCourse.facultyInitial,
+          section: prevCourse.section,
+          semester: semId,
+          schedule: prevCourse.schedule
+        });
+        matchFaculties.add(prevCourse.facultyInitial);
+      }
+
+      // Check for room matches (Same Code + Same Room)
+      if (prevCourse.room === course.room) {
+        rawRoomMatches.push({
+          faculty: prevCourse.facultyInitial,
+          room: prevCourse.room,
+          section: prevCourse.section,
+          semester: semId
+        });
+      }
+    });
 
     // Filter Room Matches: Only include if faculty is also in Time or Section matches
     matches.roomMatches = rawRoomMatches.filter(m => matchFaculties.has(m.faculty));
