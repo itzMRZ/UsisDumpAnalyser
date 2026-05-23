@@ -351,9 +351,7 @@ const DataService = {
         const matchCode = course.code.toUpperCase().includes(filter);
         const matchSection = course.section.toUpperCase().includes(filter);
         const matchFaculty = course.faculty.toUpperCase().includes(filter);
-        const matchSchedule = course.schedule.some(schedule =>
-          `${schedule.day} ${Utils.formatTime(schedule.start)}`.toUpperCase().includes(filter)
-        );
+        const matchSchedule = course.schedule.some(schedule => schedule.searchableString.includes(filter));
         return matchCode || matchSection || matchFaculty || matchSchedule;
       });
       console.log(`🔍 Filter "${filter}" resulted in ${this._state.filteredData.length} courses`);
