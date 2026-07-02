@@ -112,11 +112,16 @@ const Utils = {
           labRoom = course.labRoomName;
         }
         if (course.labSchedules && course.labSchedules.length > 0) {
-             labSchedule = course.labSchedules.map(s => ({
-                day: s.day.substring(0, 3).toUpperCase(),
-                start: this.timeToMinutes(s.startTime),
-                end: this.timeToMinutes(s.endTime)
-             }));
+             labSchedule = course.labSchedules.map(s => {
+        const dayStr = s.day.substring(0, 3).toUpperCase();
+        const startMins = this.timeToMinutes(s.startTime);
+        return {
+          day: dayStr,
+          start: startMins,
+          end: this.timeToMinutes(s.endTime),
+          searchableString: `${dayStr} ${this.formatTime(startMins)}`.toUpperCase()
+        };
+      });
         }
       } else {
         // Old format: extract lab room from LabSchedule string
@@ -178,11 +183,16 @@ const Utils = {
    */
   getComparableSchedule: function(course, format) {
     if (format === 'spring25') {
-      return (course.sectionSchedule?.classSchedules || []).map(s => ({
-        day: s.day.substring(0, 3).toUpperCase(),
-        start: this.timeToMinutes(s.startTime),
-        end: this.timeToMinutes(s.endTime)
-      }));
+      return (course.sectionSchedule?.classSchedules || []).map(s => {
+        const dayStr = s.day.substring(0, 3).toUpperCase();
+        const startMins = this.timeToMinutes(s.startTime);
+        return {
+          day: dayStr,
+          start: startMins,
+          end: this.timeToMinutes(s.endTime),
+          searchableString: `${dayStr} ${this.formatTime(startMins)}`.toUpperCase()
+        };
+      });
     }
     let scheduleEntries = [];
     if (course.classSchedule) {
@@ -193,11 +203,15 @@ const Utils = {
     }
     return scheduleEntries.map(entry => {
       const match = entry.match(/(\w+)\((\d+:\d+ [AP]M)/i);
-      return match ? {
-        day: match[1].substring(0, 3).toUpperCase(),
-        start: this.timeToMinutes(match[2]),
-        end: null
-      } : null;
+      if (!match) return null;
+      const dayStr = match[1].substring(0, 3).toUpperCase();
+      const startMins = this.timeToMinutes(match[2]);
+      return {
+        day: dayStr,
+        start: startMins,
+        end: null,
+        searchableString: `${dayStr} ${this.formatTime(startMins)}`.toUpperCase()
+      };
     }).filter(Boolean);
   },
 
