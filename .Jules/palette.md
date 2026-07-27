@@ -1,0 +1,3 @@
+## 2026-01-10 - Search Keyboard Shortcut & Accessibility
+**Learning:** Users often rely on standard keyboard shortcuts like `/` or `Ctrl+K` for search, but visual cues are essential for discoverability. Adding a `.sr-only` label significantly improves accessibility for screen readers without altering the visual design.
+**Action:** When implementing search features, always include a proper label (even if visually hidden) and consider adding standard keyboard shortcuts with visual hints for desktop users.
