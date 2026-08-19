@@ -9814,28 +9814,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": "2026-09-13",
-      "finalExamStartTime": "14:00:00",
-      "finalExamEndTime": "16:00:00",
       "midExamDate": "2026-07-26",
-      "midExamStartTime": "14:00:00",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Sep 13, 2026 2:00 PM - 4:00 PM",
-      "midExamDetail": "Jul 26, 2026 2:00 PM - 4:00 PM",
-      "classStartDate": "2026-06-09",
       "classEndDate": "2026-09-08",
+      "finalExamDate": "2026-09-13",
+      "midExamDetail": "Jul 26, 2026 2:00 PM - 4:00 PM",
       "classSchedules": [
         {
-          "startTime": "09:30:00",
+          "day": "SUNDAY",
           "endTime": "10:50:00",
-          "day": "SUNDAY"
+          "startTime": "09:30:00"
         },
         {
-          "startTime": "09:30:00",
+          "day": "TUESDAY",
           "endTime": "10:50:00",
-          "day": "TUESDAY"
+          "startTime": "09:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-06-09",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Sep 13, 2026 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20262,
@@ -28097,28 +28097,28 @@
     "sectionSchedule": {
       "classPairId": 2,
       "classSlotId": 13092,
-      "finalExamDate": "2026-09-14",
-      "finalExamStartTime": "11:00:00",
-      "finalExamEndTime": "13:00:00",
       "midExamDate": "2026-07-27",
-      "midExamStartTime": "11:00:00",
-      "midExamEndTime": "13:00:00",
-      "finalExamDetail": "Monday, September 14, 2026 11:00 AM - 1:00 PM",
-      "midExamDetail": "Monday, July 27, 2026 11:00 AM - 1:00 PM",
-      "classStartDate": "2026-06-09",
       "classEndDate": "2026-09-08",
+      "finalExamDate": "2026-09-14",
+      "midExamDetail": "Monday, July 27, 2026 11:00 AM - 1:00 PM",
       "classSchedules": [
         {
-          "startTime": "11:00:00",
+          "day": "SUNDAY",
           "endTime": "12:20:00",
-          "day": "SUNDAY"
+          "startTime": "11:00:00"
         },
         {
-          "startTime": "11:00:00",
+          "day": "TUESDAY",
           "endTime": "12:20:00",
-          "day": "TUESDAY"
+          "startTime": "11:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-06-09",
+      "midExamEndTime": "13:00:00",
+      "finalExamDetail": "Monday, September 14, 2026 11:00 AM - 1:00 PM",
+      "finalExamEndTime": "13:00:00",
+      "midExamStartTime": "11:00:00",
+      "finalExamStartTime": "11:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20262,
@@ -51552,23 +51552,23 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": null,
-      "finalExamStartTime": null,
-      "finalExamEndTime": null,
       "midExamDate": null,
-      "midExamStartTime": null,
-      "midExamEndTime": null,
-      "finalExamDetail": null,
-      "midExamDetail": null,
-      "classStartDate": "2026-08-02",
       "classEndDate": "2026-12-03",
+      "finalExamDate": null,
+      "midExamDetail": null,
       "classSchedules": [
         {
-          "startTime": "08:00:00",
+          "day": "SUNDAY",
           "endTime": "10:50:00",
-          "day": "SUNDAY"
+          "startTime": "08:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-08-02",
+      "midExamEndTime": null,
+      "finalExamDetail": null,
+      "finalExamEndTime": null,
+      "midExamStartTime": null,
+      "finalExamStartTime": null
     },
     "sectionType": "LAB",
     "semesterSessionId": 20262,
@@ -54090,23 +54090,23 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": null,
-      "finalExamStartTime": null,
-      "finalExamEndTime": null,
       "midExamDate": null,
-      "midExamStartTime": null,
-      "midExamEndTime": null,
-      "finalExamDetail": null,
-      "midExamDetail": null,
-      "classStartDate": "2026-08-02",
       "classEndDate": "2026-12-03",
+      "finalExamDate": null,
+      "midExamDetail": null,
       "classSchedules": [
         {
-          "startTime": "09:30:00",
+          "day": "MONDAY",
           "endTime": "12:20:00",
-          "day": "MONDAY"
+          "startTime": "09:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-08-02",
+      "midExamEndTime": null,
+      "finalExamDetail": null,
+      "finalExamEndTime": null,
+      "midExamStartTime": null,
+      "finalExamStartTime": null
     },
     "sectionType": "LAB",
     "semesterSessionId": 20262,
@@ -73816,65 +73816,6 @@
   },
   {
     "academicDegree": "UNDERGRADUATE",
-    "capacity": 38,
-    "consumedSeat": 37,
-    "courseCode": "CSE110",
-    "courseCredit": 3,
-    "courseId": 1510,
-    "courseType": "THEORY",
-    "faculties": "KNI",
-    "parentSectionId": null,
-    "roomName": "09A-02C",
-    "roomNumber": "09A-02C",
-    "sectionId": 187363,
-    "sectionName": "08",
-    "sectionSchedule": {
-      "classPairId": null,
-      "classSlotId": null,
-      "midExamDate": "2026-07-26",
-      "classEndDate": "2026-09-08",
-      "finalExamDate": "2026-09-13",
-      "midExamDetail": "Jul 26, 2026 8:30 AM - 10:30 AM",
-      "classSchedules": [
-        {
-          "day": "SUNDAY",
-          "endTime": "12:20:00",
-          "startTime": "11:00:00"
-        },
-        {
-          "day": "TUESDAY",
-          "endTime": "12:20:00",
-          "startTime": "11:00:00"
-        }
-      ],
-      "classStartDate": "2026-06-09",
-      "midExamEndTime": "10:30:00",
-      "finalExamDetail": "Sep 13, 2026 8:30 AM - 10:30 AM",
-      "finalExamEndTime": "10:30:00",
-      "midExamStartTime": "08:30:00",
-      "finalExamStartTime": "08:30:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20262,
-    "courseName": "PROGRAMMING LANGUAGE I",
-    "prerequisiteCourses": null,
-    "labSchedules": [
-      {
-        "startTime": "14:00:00",
-        "endTime": "16:50:00",
-        "day": "WEDNESDAY"
-      }
-    ],
-    "labSectionId": 187364,
-    "labCourseCode": "CSE110L",
-    "labFaculties": "TBA",
-    "labName": "PROGRAMMING LANGUAGE I LAB",
-    "labRoomName": "09B-09L",
-    "preRegLabSchedule": "WEDNESDAY(2:00 PM-4:50 PM-09B-09L)",
-    "preRegSchedule": "SUNDAY(11:00 AM-12:20 PM-09A-02C)\nTUESDAY(11:00 AM-12:20 PM-09A-02C)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
     "capacity": 40,
     "consumedSeat": 40,
     "courseCode": "PSY101",
@@ -76432,6 +76373,65 @@
     "labRoomName": "09B-09L",
     "preRegLabSchedule": "TUESDAY(8:00 AM-10:50 AM-09B-09L)",
     "preRegSchedule": "MONDAY(9:30 AM-10:50 AM-10A-05C)\nWEDNESDAY(9:30 AM-10:50 AM-10A-05C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
+    "capacity": 38,
+    "consumedSeat": 37,
+    "courseCode": "CSE110",
+    "courseCredit": 3,
+    "courseId": 1510,
+    "courseType": "THEORY",
+    "faculties": "KNI",
+    "parentSectionId": null,
+    "roomName": "09A-02C",
+    "roomNumber": "09A-02C",
+    "sectionId": 187363,
+    "sectionName": "08",
+    "sectionSchedule": {
+      "classPairId": null,
+      "classSlotId": null,
+      "midExamDate": "2026-07-26",
+      "classEndDate": "2026-09-08",
+      "finalExamDate": "2026-09-13",
+      "midExamDetail": "Jul 26, 2026 8:30 AM - 10:30 AM",
+      "classSchedules": [
+        {
+          "day": "SUNDAY",
+          "endTime": "12:20:00",
+          "startTime": "11:00:00"
+        },
+        {
+          "day": "TUESDAY",
+          "endTime": "12:20:00",
+          "startTime": "11:00:00"
+        }
+      ],
+      "classStartDate": "2026-06-09",
+      "midExamEndTime": "10:30:00",
+      "finalExamDetail": "Sep 13, 2026 8:30 AM - 10:30 AM",
+      "finalExamEndTime": "10:30:00",
+      "midExamStartTime": "08:30:00",
+      "finalExamStartTime": "08:30:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20262,
+    "courseName": "PROGRAMMING LANGUAGE I",
+    "prerequisiteCourses": null,
+    "labSchedules": [
+      {
+        "startTime": "14:00:00",
+        "endTime": "16:50:00",
+        "day": "WEDNESDAY"
+      }
+    ],
+    "labSectionId": 187364,
+    "labCourseCode": "CSE110L",
+    "labFaculties": "TBA",
+    "labName": "PROGRAMMING LANGUAGE I LAB",
+    "labRoomName": "09B-09L",
+    "preRegLabSchedule": "WEDNESDAY(2:00 PM-4:50 PM-09B-09L)",
+    "preRegSchedule": "SUNDAY(11:00 AM-12:20 PM-09A-02C)\nTUESDAY(11:00 AM-12:20 PM-09A-02C)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -91794,28 +91794,28 @@
     "sectionSchedule": {
       "classPairId": 2,
       "classSlotId": 13090,
-      "finalExamDate": "2026-09-14",
-      "finalExamStartTime": "08:30:00",
-      "finalExamEndTime": "10:30:00",
       "midExamDate": "2026-07-27",
-      "midExamStartTime": "08:30:00",
-      "midExamEndTime": "10:30:00",
-      "finalExamDetail": "Monday, September 14, 2026 8:30 AM - 10:30 AM",
-      "midExamDetail": "Monday, July 27, 2026 8:30 AM - 10:30 AM",
-      "classStartDate": "2026-06-09",
       "classEndDate": "2026-09-08",
+      "finalExamDate": "2026-09-14",
+      "midExamDetail": "Monday, July 27, 2026 8:30 AM - 10:30 AM",
       "classSchedules": [
         {
-          "startTime": "08:00:00",
+          "day": "SUNDAY",
           "endTime": "09:20:00",
-          "day": "SUNDAY"
+          "startTime": "08:00:00"
         },
         {
-          "startTime": "08:00:00",
+          "day": "TUESDAY",
           "endTime": "09:20:00",
-          "day": "TUESDAY"
+          "startTime": "08:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-06-09",
+      "midExamEndTime": "10:30:00",
+      "finalExamDetail": "Monday, September 14, 2026 8:30 AM - 10:30 AM",
+      "finalExamEndTime": "10:30:00",
+      "midExamStartTime": "08:30:00",
+      "finalExamStartTime": "08:30:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20262,
@@ -114336,28 +114336,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "midExamDate": "2026-07-29",
-      "classEndDate": "2026-09-08",
       "finalExamDate": "2026-09-16",
-      "midExamDetail": "Jul 29, 2026 8:30 AM - 10:30 AM",
-      "classSchedules": [
-        {
-          "day": "SATURDAY",
-          "endTime": "09:20:00",
-          "startTime": "08:00:00"
-        },
-        {
-          "day": "THURSDAY",
-          "endTime": "09:20:00",
-          "startTime": "08:00:00"
-        }
-      ],
-      "classStartDate": "2026-06-09",
+      "finalExamStartTime": "08:30:00",
+      "finalExamEndTime": "10:30:00",
+      "midExamDate": "2026-07-29",
+      "midExamStartTime": "08:30:00",
       "midExamEndTime": "10:30:00",
       "finalExamDetail": "Sep 16, 2026 8:30 AM - 10:30 AM",
-      "finalExamEndTime": "10:30:00",
-      "midExamStartTime": "08:30:00",
-      "finalExamStartTime": "08:30:00"
+      "midExamDetail": "Jul 29, 2026 8:30 AM - 10:30 AM",
+      "classStartDate": "2026-06-09",
+      "classEndDate": "2026-09-08",
+      "classSchedules": [
+        {
+          "startTime": "08:00:00",
+          "endTime": "09:20:00",
+          "day": "SATURDAY"
+        },
+        {
+          "startTime": "08:00:00",
+          "endTime": "09:20:00",
+          "day": "THURSDAY"
+        }
+      ]
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20262,
