@@ -49618,28 +49618,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": "2026-12-08",
-      "finalExamStartTime": "09:30:00",
-      "finalExamEndTime": "12:00:00",
       "midExamDate": "2026-10-04",
-      "midExamStartTime": "15:00:00",
-      "midExamEndTime": "16:20:00",
-      "finalExamDetail": "Dec 8, 2026 9:30 AM - 12:00 PM",
-      "midExamDetail": "Oct 4, 2026 3:00 PM - 4:20 PM",
-      "classStartDate": "2026-08-02",
       "classEndDate": "2026-12-03",
+      "finalExamDate": "2026-12-08",
+      "midExamDetail": "Oct 4, 2026 3:00 PM - 4:20 PM",
       "classSchedules": [
         {
-          "startTime": "09:30:00",
+          "day": "THURSDAY",
           "endTime": "10:50:00",
-          "day": "THURSDAY"
+          "startTime": "09:30:00"
         },
         {
-          "startTime": "11:00:00",
+          "day": "THURSDAY",
           "endTime": "12:20:00",
-          "day": "THURSDAY"
+          "startTime": "11:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-08-02",
+      "midExamEndTime": "16:20:00",
+      "finalExamDetail": "Dec 8, 2026 9:30 AM - 12:00 PM",
+      "finalExamEndTime": "12:00:00",
+      "midExamStartTime": "15:00:00",
+      "finalExamStartTime": "09:30:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20262,
@@ -50727,9 +50727,9 @@
       "classEndDate": "2026-12-03",
       "classSchedules": [
         {
-          "startTime": "20:00:00",
-          "endTime": "21:20:00",
-          "day": "MONDAY"
+          "startTime": "09:30:00",
+          "endTime": "12:20:00",
+          "day": "THURSDAY"
         }
       ]
     },
@@ -50744,7 +50744,7 @@
     "labName": null,
     "labRoomName": null,
     "preRegLabSchedule": null,
-    "preRegSchedule": "MONDAY(8:00 PM-9:20 PM-11F-33L)"
+    "preRegSchedule": "THURSDAY(9:30 AM-12:20 PM-11F-33L)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -53989,23 +53989,23 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": null,
-      "finalExamStartTime": null,
-      "finalExamEndTime": null,
       "midExamDate": null,
-      "midExamStartTime": null,
-      "midExamEndTime": null,
-      "finalExamDetail": null,
-      "midExamDetail": null,
-      "classStartDate": "2026-08-02",
       "classEndDate": "2026-12-03",
+      "finalExamDate": null,
+      "midExamDetail": null,
       "classSchedules": [
         {
-          "startTime": "09:30:00",
+          "day": "THURSDAY",
           "endTime": "12:20:00",
-          "day": "THURSDAY"
+          "startTime": "09:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-08-02",
+      "midExamEndTime": null,
+      "finalExamDetail": null,
+      "finalExamEndTime": null,
+      "midExamStartTime": null,
+      "finalExamStartTime": null
     },
     "sectionType": "LAB",
     "semesterSessionId": 20262,
@@ -56686,9 +56686,9 @@
       "classEndDate": "2026-12-03",
       "classSchedules": [
         {
-          "startTime": "20:00:00",
-          "endTime": "21:20:00",
-          "day": "THURSDAY"
+          "startTime": "09:30:00",
+          "endTime": "12:20:00",
+          "day": "WEDNESDAY"
         }
       ]
     },
@@ -56703,7 +56703,7 @@
     "labName": null,
     "labRoomName": null,
     "preRegLabSchedule": null,
-    "preRegSchedule": "THURSDAY(8:00 PM-9:20 PM-11F-33L)"
+    "preRegSchedule": "WEDNESDAY(9:30 AM-12:20 PM-11F-33L)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -71308,59 +71308,6 @@
   },
   {
     "academicDegree": "UNDERGRADUATE",
-    "capacity": 35,
-    "consumedSeat": 34,
-    "courseCode": "MSC221",
-    "courseCredit": 3,
-    "courseId": 1809,
-    "courseType": "THEORY",
-    "faculties": "BIJD",
-    "parentSectionId": null,
-    "roomName": "FT11-02L",
-    "roomNumber": "FT11-02L",
-    "sectionId": 186364,
-    "sectionName": "13",
-    "sectionSchedule": {
-      "classPairId": null,
-      "classSlotId": null,
-      "midExamDate": "2026-07-28",
-      "classEndDate": "2026-09-08",
-      "finalExamDate": "2026-09-15",
-      "midExamDetail": "Jul 28, 2026 10:30 AM - 12:30 PM",
-      "classSchedules": [
-        {
-          "day": "SATURDAY",
-          "endTime": "12:20:00",
-          "startTime": "11:00:00"
-        },
-        {
-          "day": "THURSDAY",
-          "endTime": "12:20:00",
-          "startTime": "11:00:00"
-        }
-      ],
-      "classStartDate": "2026-06-09",
-      "midExamEndTime": "12:30:00",
-      "finalExamDetail": "Sep 15, 2026 10:30 AM - 12:30 PM",
-      "finalExamEndTime": "12:30:00",
-      "midExamStartTime": "10:30:00",
-      "finalExamStartTime": "10:30:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20262,
-    "courseName": "COMPUTER APPLICATIONS IN BUSINESS",
-    "prerequisiteCourses": "(STA101 AND MAT101) OR (MAT101 AND STA201) OR (MAT110 AND STA201) OR (STA101 AND MAT110)",
-    "labSchedules": null,
-    "labSectionId": null,
-    "labCourseCode": null,
-    "labFaculties": null,
-    "labName": null,
-    "labRoomName": null,
-    "preRegLabSchedule": null,
-    "preRegSchedule": "SATURDAY(11:00 AM-12:20 PM-FT11-02L)\nTHURSDAY(11:00 AM-12:20 PM-FT11-02L)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
     "capacity": 30,
     "consumedSeat": 28,
     "courseCode": "POL101",
@@ -78214,6 +78161,59 @@
     "labRoomName": "12B-19L",
     "preRegLabSchedule": "WEDNESDAY(8:00 AM-10:50 AM-12B-19L)",
     "preRegSchedule": "SUNDAY(9:30 AM-10:50 AM-09A-05C)\nTUESDAY(9:30 AM-10:50 AM-09A-05C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
+    "capacity": 35,
+    "consumedSeat": 34,
+    "courseCode": "MSC221",
+    "courseCredit": 3,
+    "courseId": 1809,
+    "courseType": "THEORY",
+    "faculties": "BIJD",
+    "parentSectionId": null,
+    "roomName": "FT11-02L",
+    "roomNumber": "FT11-02L",
+    "sectionId": 186364,
+    "sectionName": "13",
+    "sectionSchedule": {
+      "classPairId": null,
+      "classSlotId": null,
+      "midExamDate": "2026-07-28",
+      "classEndDate": "2026-09-08",
+      "finalExamDate": "2026-09-15",
+      "midExamDetail": "Jul 28, 2026 10:30 AM - 12:30 PM",
+      "classSchedules": [
+        {
+          "day": "SATURDAY",
+          "endTime": "12:20:00",
+          "startTime": "11:00:00"
+        },
+        {
+          "day": "THURSDAY",
+          "endTime": "12:20:00",
+          "startTime": "11:00:00"
+        }
+      ],
+      "classStartDate": "2026-06-09",
+      "midExamEndTime": "12:30:00",
+      "finalExamDetail": "Sep 15, 2026 10:30 AM - 12:30 PM",
+      "finalExamEndTime": "12:30:00",
+      "midExamStartTime": "10:30:00",
+      "finalExamStartTime": "10:30:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20262,
+    "courseName": "COMPUTER APPLICATIONS IN BUSINESS",
+    "prerequisiteCourses": "(STA101 AND MAT101) OR (MAT101 AND STA201) OR (MAT110 AND STA201) OR (STA101 AND MAT110)",
+    "labSchedules": null,
+    "labSectionId": null,
+    "labCourseCode": null,
+    "labFaculties": null,
+    "labName": null,
+    "labRoomName": null,
+    "preRegLabSchedule": null,
+    "preRegSchedule": "SATURDAY(11:00 AM-12:20 PM-FT11-02L)\nTHURSDAY(11:00 AM-12:20 PM-FT11-02L)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
