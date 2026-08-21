@@ -12,6 +12,7 @@ const DEFAULT_SENTINELS = ['ENG101:01', 'MAT110:01', 'CSE110:01'];
 const SENTINELS = parseCsv(process.env.NEW_SEMESTER_SENTINELS) || DEFAULT_SENTINELS;
 const TERM_SEQUENCE = parseCsv(process.env.TERM_SEQUENCE) || ['spring', 'summer', 'fall'];
 const THRESHOLD_DAYS = Number.parseInt(process.env.MID_EXAM_DAY_THRESHOLD || '10', 10);
+const MIN_SENTINEL_AGREEMENT = Number.parseInt(process.env.MIN_SENTINEL_AGREEMENT || '2', 10);
 const CDN_URL = process.env.CDN_URL || 'https://usis-cdn.eniamza.com/connect.json';
 const LOCAL_CDN_FILE = process.env.LOCAL_CDN_FILE || '';
 const DRY_RUN = /^(1|true|yes)$/i.test(process.env.DRY_RUN || '');
@@ -38,7 +39,7 @@ async function main() {
     const nextDataPath = path.join(repoRoot, nextSemester.file);
     const updatedSemesters = promoteSemester(config.dataSources.semesters, currentSemester.id, nextSemester);
 
-    console.log(`New semester detected from ${detection.courseCode} section ${detection.section}: ${detection.previousDate} -> ${detection.nextDate} (${detection.diffDays} days)`);
+    console.log(`New semester detected from ${detection.matchedSentinels} sentinel(s); first match ${detection.courseCode} section ${detection.section}: ${detection.previousDate} -> ${detection.nextDate} (${detection.diffDays} days, ${detection.reason})`);
     console.log(`Promoting ${nextSemester.name} as active semester.`);
 
     if (!DRY_RUN) {
@@ -126,6 +127,8 @@ function extractCourses(payload) {
 }
 
 function detectSemesterRollover(currentCourses, liveCourses, sentinels, thresholdDays) {
+  const matches = [];
+
   for (const sentinel of sentinels) {
     const [courseCode, rawSection] = sentinel.split(':');
     const section = normalizeSectionValue(rawSection);
@@ -144,20 +147,42 @@ function detectSemesterRollover(currentCourses, liveCourses, sentinels, threshol
     }
 
     const diffDays = Math.abs(daysBetween(currentMidExam, liveMidExam));
+    const currentSession = getSemesterSessionId(currentCourse);
+    const liveSession = getSemesterSessionId(liveCourse);
+    const sessionChanged = currentSession && liveSession && currentSession !== liveSession;
+    const dateChanged = diffDays > thresholdDays;
 
-    if (diffDays > thresholdDays) {
-      return {
-        isNewSemester: true,
+    if (sessionChanged || dateChanged) {
+      matches.push({
         courseCode,
         section,
         previousDate: currentMidExam,
         nextDate: liveMidExam,
-        diffDays
-      };
+        diffDays,
+        previousSession: currentSession || null,
+        nextSession: liveSession || null,
+        reason: sessionChanged ? 'semester-session-changed' : 'mid-exam-date-shift'
+      });
     }
   }
 
-  return { isNewSemester: false };
+  if (matches.length < Math.max(1, MIN_SENTINEL_AGREEMENT)) {
+    return { isNewSemester: false, matchedSentinels: matches.length };
+  }
+
+  const first = matches[0];
+  return {
+    isNewSemester: true,
+    courseCode: first.courseCode,
+    section: first.section,
+    previousDate: first.previousDate,
+    nextDate: first.nextDate,
+    diffDays: first.diffDays,
+    previousSession: first.previousSession,
+    nextSession: first.nextSession,
+    reason: first.reason,
+    matchedSentinels: matches.length
+  };
 }
 
 function findCourse(courses, courseCode, section) {
@@ -179,6 +204,11 @@ function getSectionValue(course) {
   }
 
   return '';
+}
+
+function getSemesterSessionId(course) {
+  const value = course?.semesterSessionId;
+  return value === undefined || value === null || value === '' ? null : String(value);
 }
 
 function normalizeSectionValue(value) {

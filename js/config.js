@@ -10,12 +10,19 @@ const CONFIG = {
     statusUrl: 'https://connect-cdn.itzmrz.xyz/status.json',
     semesters: [
       {
+        id: 'fall26',
+        name: 'Fall 2026',
+        file: 'data/fall-26.json',
+        year: '2026',
+        dataFormat: 'spring25',
+        isCurrent: true
+      },
+      {
         id: 'summer26',
         name: 'Summer 2026',
         file: 'data/summer-26.json',
         year: '2026',
-        dataFormat: 'spring25',
-        isCurrent: true
+        dataFormat: 'spring25'
       },
       {
         id: 'spring26',

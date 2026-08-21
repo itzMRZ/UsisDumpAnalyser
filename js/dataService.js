@@ -71,13 +71,16 @@ const DataService = {
    * @returns {Object} The current semester configuration
    */
   getCurrentSemester: function() {
-    const detectedKey = this._semesterStatus?.currentSemesterKey;
-    if (detectedKey) {
-      const detectedSemester = CONFIG.dataSources.semesters.find(s => s.id === detectedKey);
-      if (detectedSemester) return detectedSemester;
-    }
-
+    // MRZ status is advisory metadata only. The configured current semester
+    // owns the live-data path so stale status cannot disable eniamza fetching.
     return CONFIG.dataSources.semesters.find(s => s.isCurrent) || CONFIG.dataSources.semesters[0];
+  },
+
+  getDetectedSemester: function() {
+    const detectedKey = this._semesterStatus?.currentSemesterKey;
+    return detectedKey
+      ? CONFIG.dataSources.semesters.find(s => s.id === detectedKey) || null
+      : null;
   },
 
   /**

@@ -30,6 +30,7 @@ jobs:
           CDN_URL: https://usis-cdn.eniamza.com/connect.json
           MID_EXAM_DAY_THRESHOLD: 10
           NEW_SEMESTER_SENTINELS: ENG101:01,MAT110:01,CSE110:01
+          MIN_SENTINEL_AGREEMENT: 2
           TERM_SEQUENCE: spring,summer,fall
         run: node scripts/update-active-semester.mjs
 
