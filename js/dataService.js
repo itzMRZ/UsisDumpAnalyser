@@ -6,6 +6,7 @@ const DataService = {
   // Cache for semester data with metadata
   _semesterData: {},
   _semesterDataSource: {}, // Track whether data came from CDN, local, or cache
+  _semesterStatus: null, // Optional MRZ CDN detection metadata
   _pastCoursesByCode: null, // Index of past courses by code
 
   // Current application state
@@ -21,7 +22,39 @@ const DataService = {
    * @returns {Promise} Promise resolving when initialization is complete
    */
   init: async function() {
+    await this.loadSemesterStatus();
     return this.preloadAllSemesterData();
+  },
+
+  /**
+   * Load optional detection metadata without making it a dependency.
+   * Live course data still comes from the eniamza CDN below.
+   */
+  loadSemesterStatus: async function() {
+    const statusUrl = CONFIG.dataSources.statusUrl;
+    if (!statusUrl) return null;
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 4000);
+      const response = await fetch(statusUrl, {
+        cache: 'no-store',
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      if (!response.ok) throw new Error(`status endpoint returned ${response.status}`);
+      this._semesterStatus = await response.json();
+      return this._semesterStatus;
+    } catch (error) {
+      console.warn('Optional semester status unavailable; continuing with live/local data:', error.message);
+      this._semesterStatus = null;
+      return null;
+    }
+  },
+
+  getSemesterStatus: function() {
+    return this._semesterStatus;
   },
 
   /**
@@ -38,6 +71,12 @@ const DataService = {
    * @returns {Object} The current semester configuration
    */
   getCurrentSemester: function() {
+    const detectedKey = this._semesterStatus?.currentSemesterKey;
+    if (detectedKey) {
+      const detectedSemester = CONFIG.dataSources.semesters.find(s => s.id === detectedKey);
+      if (detectedSemester) return detectedSemester;
+    }
+
     return CONFIG.dataSources.semesters.find(s => s.isCurrent) || CONFIG.dataSources.semesters[0];
   },
 

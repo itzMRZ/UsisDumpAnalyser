@@ -10,8 +10,9 @@
 
 | Feature | Description |
 | --- | --- |
-| Live data | Current semester fetched from CDN; falls back to bundled archive automatically |
-| Multi-semester | Switch between Fall 2026, Spring 2026, Fall 2025, Summer 2025, Spring 2025, Fall 2024, Summer 2024 |
+| Live data | Current semester fetched from eniamza CDN; falls back to bundled archive automatically |
+| Detection metadata | Optional semester/status metadata from MRZ Connect CDN; never replaces live data |
+| Multi-semester | Switch between Summer 2026, Spring 2026, Fall 2025, Summer 2025, Spring 2025, Fall 2024, Summer 2024 |
 | Search | Real-time filter by course code, faculty name/initial, section, or schedule |
 | Sort | Click any column header to sort ascending / descending |
 | Faculty prediction | Suggests probable faculty for TBA sections based on historical data |
@@ -97,7 +98,7 @@ Example:
 - `scripts/update-active-semester.mjs` fetches the CDN dump and refreshes the active archive in `data/`.
 - A new semester is detected when any sentinel course section in `ENG101:01`, `MAT110:01`, or `CSE110:01` has a `midExamDate` shift greater than 10 days.
 - When that happens, the workflow writes a new `data/<semester>.json`, promotes it to `isCurrent: true` in `js/config.js`, and commits the change automatically.
-- The term progression is controlled by `TERM_SEQUENCE` in the workflow. It is currently set to `spring,fall,summer` to match the requested rule and can be changed without editing the script.
+- The term progression is controlled by `TERM_SEQUENCE` in the workflow. It is currently set to `spring,summer,fall` and can be changed without editing the script.
 
 ---
 

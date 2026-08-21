@@ -7,11 +7,12 @@ const CONFIG = {
   // Data Sources
   dataSources: {
     cdnUrl: 'https://usis-cdn.eniamza.com/connect.json',
+    statusUrl: 'https://connect-cdn.itzmrz.xyz/status.json',
     semesters: [
       {
-        id: 'fall26',
-        name: 'Fall 2026',
-        file: 'data/fall-26.json',
+        id: 'summer26',
+        name: 'Summer 2026',
+        file: 'data/summer-26.json',
         year: '2026',
         dataFormat: 'spring25',
         isCurrent: true

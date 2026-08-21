@@ -10,7 +10,7 @@ const configPath = path.join(repoRoot, 'js', 'config.js');
 
 const DEFAULT_SENTINELS = ['ENG101:01', 'MAT110:01', 'CSE110:01'];
 const SENTINELS = parseCsv(process.env.NEW_SEMESTER_SENTINELS) || DEFAULT_SENTINELS;
-const TERM_SEQUENCE = parseCsv(process.env.TERM_SEQUENCE) || ['spring', 'fall', 'summer'];
+const TERM_SEQUENCE = parseCsv(process.env.TERM_SEQUENCE) || ['spring', 'summer', 'fall'];
 const THRESHOLD_DAYS = Number.parseInt(process.env.MID_EXAM_DAY_THRESHOLD || '10', 10);
 const CDN_URL = process.env.CDN_URL || 'https://usis-cdn.eniamza.com/connect.json';
 const LOCAL_CDN_FILE = process.env.LOCAL_CDN_FILE || '';
