@@ -100352,28 +100352,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": "2027-01-07",
-      "finalExamStartTime": "16:30:00",
-      "finalExamEndTime": "18:30:00",
       "midExamDate": "2026-11-21",
-      "midExamStartTime": "16:30:00",
-      "midExamEndTime": "18:30:00",
-      "finalExamDetail": "Jan 7, 2027 4:30 PM - 6:30 PM",
-      "midExamDetail": "Nov 21, 2026 4:30 PM - 6:30 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-07",
+      "midExamDetail": "Nov 21, 2026 4:30 PM - 6:30 PM",
       "classSchedules": [
         {
-          "startTime": "08:00:00",
+          "day": "MONDAY",
           "endTime": "09:20:00",
-          "day": "MONDAY"
+          "startTime": "08:00:00"
         },
         {
-          "startTime": "08:00:00",
+          "day": "WEDNESDAY",
           "endTime": "09:20:00",
-          "day": "WEDNESDAY"
+          "startTime": "08:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "18:30:00",
+      "finalExamDetail": "Jan 7, 2027 4:30 PM - 6:30 PM",
+      "finalExamEndTime": "18:30:00",
+      "midExamStartTime": "16:30:00",
+      "finalExamStartTime": "16:30:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
