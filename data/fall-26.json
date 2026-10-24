@@ -2078,7 +2078,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 50,
-    "consumedSeat": 24,
+    "consumedSeat": 25,
     "courseCode": "ARC300",
     "courseCredit": 3,
     "courseId": 1202,
@@ -26280,28 +26280,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": "2027-01-08",
-      "finalExamStartTime": "14:00:00",
-      "finalExamEndTime": "16:00:00",
       "midExamDate": "2026-11-22",
-      "midExamStartTime": "14:00:00",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Jan 8, 2027 2:00 PM - 4:00 PM",
-      "midExamDetail": "Nov 22, 2026 2:00 PM - 4:00 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-08",
+      "midExamDetail": "Nov 22, 2026 2:00 PM - 4:00 PM",
       "classSchedules": [
         {
-          "startTime": "08:00:00",
+          "day": "SATURDAY",
           "endTime": "09:20:00",
-          "day": "SATURDAY"
+          "startTime": "08:00:00"
         },
         {
-          "startTime": "08:00:00",
+          "day": "THURSDAY",
           "endTime": "09:20:00",
-          "day": "THURSDAY"
+          "startTime": "08:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Jan 8, 2027 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -48484,7 +48484,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 33,
-    "consumedSeat": 34,
+    "consumedSeat": 33,
     "courseCode": "ENG101",
     "courseCredit": 3,
     "courseId": 1503,
@@ -96853,7 +96853,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 30,
-    "consumedSeat": 29,
+    "consumedSeat": 32,
     "courseCode": "SPN101",
     "courseCredit": 3,
     "courseId": 2443,
