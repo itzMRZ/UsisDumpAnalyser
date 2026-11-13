@@ -28681,28 +28681,28 @@
     "sectionSchedule": {
       "classPairId": 2,
       "classSlotId": 13093,
-      "finalExamDate": "2027-01-10",
-      "finalExamStartTime": "11:00:00",
-      "finalExamEndTime": "13:00:00",
       "midExamDate": "2026-11-24",
-      "midExamStartTime": "11:00:00",
-      "midExamEndTime": "13:00:00",
-      "finalExamDetail": "Sunday, January 10, 2027 11:00 AM - 1:00 PM",
-      "midExamDetail": "Tuesday, November 24, 2026 11:00 AM - 1:00 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-10",
+      "midExamDetail": "Tuesday, November 24, 2026 11:00 AM - 1:00 PM",
       "classSchedules": [
         {
-          "startTime": "12:30:00",
+          "day": "SUNDAY",
           "endTime": "13:50:00",
-          "day": "SUNDAY"
+          "startTime": "12:30:00"
         },
         {
-          "startTime": "12:30:00",
+          "day": "TUESDAY",
           "endTime": "13:50:00",
-          "day": "TUESDAY"
+          "startTime": "12:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "13:00:00",
+      "finalExamDetail": "Sunday, January 10, 2027 11:00 AM - 1:00 PM",
+      "finalExamEndTime": "13:00:00",
+      "midExamStartTime": "11:00:00",
+      "finalExamStartTime": "11:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -48071,59 +48071,6 @@
   },
   {
     "academicDegree": "UNDERGRADUATE",
-    "capacity": 33,
-    "consumedSeat": 25,
-    "courseCode": "FIN441",
-    "courseCredit": 3,
-    "courseId": 2030,
-    "courseType": "THEORY",
-    "faculties": "SDUR",
-    "parentSectionId": null,
-    "roomName": "12B-23C",
-    "roomNumber": "12B-23C",
-    "sectionId": 190499,
-    "sectionName": "02",
-    "sectionSchedule": {
-      "classPairId": null,
-      "classSlotId": null,
-      "midExamDate": "2026-11-25",
-      "classEndDate": "2027-01-04",
-      "finalExamDate": "2027-01-11",
-      "midExamDetail": "Nov 25, 2026 8:30 AM - 10:30 AM",
-      "classSchedules": [
-        {
-          "day": "SATURDAY",
-          "endTime": "13:50:00",
-          "startTime": "12:30:00"
-        },
-        {
-          "day": "THURSDAY",
-          "endTime": "13:50:00",
-          "startTime": "12:30:00"
-        }
-      ],
-      "classStartDate": "2026-10-03",
-      "midExamEndTime": "10:30:00",
-      "finalExamDetail": "Jan 11, 2027 8:30 AM - 10:30 AM",
-      "finalExamEndTime": "10:30:00",
-      "midExamStartTime": "08:30:00",
-      "finalExamStartTime": "08:30:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20263,
-    "courseName": "BANK MANAGEMENT AND DIGITAL BANKING",
-    "prerequisiteCourses": "(FIN301)",
-    "labSchedules": null,
-    "labSectionId": null,
-    "labCourseCode": null,
-    "labFaculties": null,
-    "labName": null,
-    "labRoomName": null,
-    "preRegLabSchedule": null,
-    "preRegSchedule": "SATURDAY(12:30 PM-1:50 PM-12B-23C)\nTHURSDAY(12:30 PM-1:50 PM-12B-23C)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
     "capacity": 38,
     "consumedSeat": 39,
     "courseCode": "CSE470",
@@ -57089,59 +57036,6 @@
   },
   {
     "academicDegree": "UNDERGRADUATE",
-    "capacity": 40,
-    "consumedSeat": 31,
-    "courseCode": "ENG213",
-    "courseCredit": 3,
-    "courseId": 893,
-    "courseType": "THEORY",
-    "faculties": "MHAJ",
-    "parentSectionId": null,
-    "roomName": "AN2-06C",
-    "roomNumber": "AN2-06C",
-    "sectionId": 190694,
-    "sectionName": "02",
-    "sectionSchedule": {
-      "classPairId": 2,
-      "classSlotId": 13094,
-      "midExamDate": "2026-11-23",
-      "classEndDate": "2027-01-04",
-      "finalExamDate": "2027-01-09",
-      "midExamDetail": "Monday, November 23, 2026 2:00 PM - 4:00 PM",
-      "classSchedules": [
-        {
-          "day": "SUNDAY",
-          "endTime": "15:20:00",
-          "startTime": "14:00:00"
-        },
-        {
-          "day": "TUESDAY",
-          "endTime": "15:20:00",
-          "startTime": "14:00:00"
-        }
-      ],
-      "classStartDate": "2026-10-03",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Saturday, January 9, 2027 2:00 PM - 4:00 PM",
-      "finalExamEndTime": "16:00:00",
-      "midExamStartTime": "14:00:00",
-      "finalExamStartTime": "14:00:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20263,
-    "courseName": "SURVEY OF ENGLISH LITERATURE I",
-    "prerequisiteCourses": "(ENG113 AND ENG114) OR (ENG113 AND ENG115) OR (ENG114 AND ENG115)",
-    "labSchedules": null,
-    "labSectionId": null,
-    "labCourseCode": null,
-    "labFaculties": null,
-    "labName": null,
-    "labRoomName": null,
-    "preRegLabSchedule": null,
-    "preRegSchedule": "SUNDAY(2:00 PM-3:20 PM-AN2-06C)\nTUESDAY(2:00 PM-3:20 PM-AN2-06C)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
     "capacity": 30,
     "consumedSeat": 29,
     "courseCode": "CHN101",
@@ -59102,6 +58996,59 @@
   },
   {
     "academicDegree": "UNDERGRADUATE",
+    "capacity": 33,
+    "consumedSeat": 25,
+    "courseCode": "FIN441",
+    "courseCredit": 3,
+    "courseId": 2030,
+    "courseType": "THEORY",
+    "faculties": "SDUR",
+    "parentSectionId": null,
+    "roomName": "12B-23C",
+    "roomNumber": "12B-23C",
+    "sectionId": 190499,
+    "sectionName": "02",
+    "sectionSchedule": {
+      "classPairId": null,
+      "classSlotId": null,
+      "midExamDate": "2026-11-25",
+      "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-11",
+      "midExamDetail": "Nov 25, 2026 8:30 AM - 10:30 AM",
+      "classSchedules": [
+        {
+          "day": "SATURDAY",
+          "endTime": "13:50:00",
+          "startTime": "12:30:00"
+        },
+        {
+          "day": "THURSDAY",
+          "endTime": "13:50:00",
+          "startTime": "12:30:00"
+        }
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "10:30:00",
+      "finalExamDetail": "Jan 11, 2027 8:30 AM - 10:30 AM",
+      "finalExamEndTime": "10:30:00",
+      "midExamStartTime": "08:30:00",
+      "finalExamStartTime": "08:30:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20263,
+    "courseName": "BANK MANAGEMENT AND DIGITAL BANKING",
+    "prerequisiteCourses": "(FIN301)",
+    "labSchedules": null,
+    "labSectionId": null,
+    "labCourseCode": null,
+    "labFaculties": null,
+    "labName": null,
+    "labRoomName": null,
+    "preRegLabSchedule": null,
+    "preRegSchedule": "SATURDAY(12:30 PM-1:50 PM-12B-23C)\nTHURSDAY(12:30 PM-1:50 PM-12B-23C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
     "capacity": 40,
     "consumedSeat": 14,
     "courseCode": "DMG111",
@@ -59205,6 +59152,59 @@
     "labRoomName": null,
     "preRegLabSchedule": null,
     "preRegSchedule": "SUNDAY(9:30 AM-10:50 AM-08A-06C)\nTUESDAY(9:30 AM-10:50 AM-08A-06C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
+    "capacity": 40,
+    "consumedSeat": 31,
+    "courseCode": "ENG213",
+    "courseCredit": 3,
+    "courseId": 893,
+    "courseType": "THEORY",
+    "faculties": "MHAJ",
+    "parentSectionId": null,
+    "roomName": "AN2-06C",
+    "roomNumber": "AN2-06C",
+    "sectionId": 190694,
+    "sectionName": "02",
+    "sectionSchedule": {
+      "classPairId": 2,
+      "classSlotId": 13094,
+      "midExamDate": "2026-11-23",
+      "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-09",
+      "midExamDetail": "Monday, November 23, 2026 2:00 PM - 4:00 PM",
+      "classSchedules": [
+        {
+          "day": "SUNDAY",
+          "endTime": "15:20:00",
+          "startTime": "14:00:00"
+        },
+        {
+          "day": "TUESDAY",
+          "endTime": "15:20:00",
+          "startTime": "14:00:00"
+        }
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Saturday, January 9, 2027 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20263,
+    "courseName": "SURVEY OF ENGLISH LITERATURE I",
+    "prerequisiteCourses": "(ENG113 AND ENG114) OR (ENG113 AND ENG115) OR (ENG114 AND ENG115)",
+    "labSchedules": null,
+    "labSectionId": null,
+    "labCourseCode": null,
+    "labFaculties": null,
+    "labName": null,
+    "labRoomName": null,
+    "preRegLabSchedule": null,
+    "preRegSchedule": "SUNDAY(2:00 PM-3:20 PM-AN2-06C)\nTUESDAY(2:00 PM-3:20 PM-AN2-06C)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -60611,28 +60611,28 @@
     "sectionSchedule": {
       "classPairId": 1,
       "classSlotId": 13091,
-      "finalExamDate": "2027-01-14",
-      "finalExamStartTime": "08:30:00",
-      "finalExamEndTime": "10:30:00",
       "midExamDate": "2026-11-29",
-      "midExamStartTime": "08:30:00",
-      "midExamEndTime": "10:30:00",
-      "finalExamDetail": "Thursday, January 14, 2027 8:30 AM - 10:30 AM",
-      "midExamDetail": "Sunday, November 29, 2026 8:30 AM - 10:30 AM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-14",
+      "midExamDetail": "Sunday, November 29, 2026 8:30 AM - 10:30 AM",
       "classSchedules": [
         {
-          "startTime": "09:30:00",
+          "day": "SATURDAY",
           "endTime": "10:50:00",
-          "day": "SATURDAY"
+          "startTime": "09:30:00"
         },
         {
-          "startTime": "09:30:00",
+          "day": "THURSDAY",
           "endTime": "10:50:00",
-          "day": "THURSDAY"
+          "startTime": "09:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "10:30:00",
+      "finalExamDetail": "Thursday, January 14, 2027 8:30 AM - 10:30 AM",
+      "finalExamEndTime": "10:30:00",
+      "midExamStartTime": "08:30:00",
+      "finalExamStartTime": "08:30:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -67355,7 +67355,7 @@
     "courseCredit": 3,
     "courseId": 1510,
     "courseType": "THEORY",
-    "faculties": "TBA",
+    "faculties": "ANTC",
     "parentSectionId": null,
     "roomName": "09A-02C",
     "roomNumber": "09A-02C",
@@ -99377,7 +99377,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 40,
-    "consumedSeat": 39,
+    "consumedSeat": 38,
     "courseCode": "STA201",
     "courseCredit": 3,
     "courseId": 1540,
