@@ -40540,7 +40540,7 @@
     ],
     "labSectionId": 190872,
     "labCourseCode": "EEE103L",
-    "labFaculties": "THMD,IAA",
+    "labFaculties": "THMD,ASYD",
     "labName": "COMPUTER PROGRAMMING LABORATORY",
     "labRoomName": "11B-22L",
     "preRegLabSchedule": "MONDAY(2:00 PM-4:50 PM-11B-22L)",
@@ -41925,28 +41925,28 @@
     "sectionSchedule": {
       "classPairId": 3,
       "classSlotId": 13093,
-      "finalExamDate": "2027-01-12",
-      "finalExamStartTime": "11:00:00",
-      "finalExamEndTime": "13:00:00",
       "midExamDate": "2026-11-26",
-      "midExamStartTime": "11:00:00",
-      "midExamEndTime": "13:00:00",
-      "finalExamDetail": "Tuesday, January 12, 2027 11:00 AM - 1:00 PM",
-      "midExamDetail": "Thursday, November 26, 2026 11:00 AM - 1:00 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-12",
+      "midExamDetail": "Thursday, November 26, 2026 11:00 AM - 1:00 PM",
       "classSchedules": [
         {
-          "startTime": "12:30:00",
+          "day": "MONDAY",
           "endTime": "13:50:00",
-          "day": "MONDAY"
+          "startTime": "12:30:00"
         },
         {
-          "startTime": "12:30:00",
+          "day": "WEDNESDAY",
           "endTime": "13:50:00",
-          "day": "WEDNESDAY"
+          "startTime": "12:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "13:00:00",
+      "finalExamDetail": "Tuesday, January 12, 2027 11:00 AM - 1:00 PM",
+      "finalExamEndTime": "13:00:00",
+      "midExamStartTime": "11:00:00",
+      "finalExamStartTime": "11:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -64228,23 +64228,23 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": null,
-      "finalExamStartTime": null,
-      "finalExamEndTime": null,
       "midExamDate": null,
-      "midExamStartTime": null,
-      "midExamEndTime": null,
-      "finalExamDetail": null,
-      "midExamDetail": null,
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": null,
+      "midExamDetail": null,
       "classSchedules": [
         {
-          "startTime": "14:00:00",
+          "day": "TUESDAY",
           "endTime": "16:50:00",
-          "day": "TUESDAY"
+          "startTime": "14:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": null,
+      "finalExamDetail": null,
+      "finalExamEndTime": null,
+      "midExamStartTime": null,
+      "finalExamStartTime": null
     },
     "sectionType": "LAB",
     "semesterSessionId": 20263,
@@ -71010,7 +71010,7 @@
     "courseCredit": 3,
     "courseId": 145,
     "courseType": "THEORY",
-    "faculties": "NHD",
+    "faculties": "SKBR",
     "parentSectionId": null,
     "roomName": "08A-04C",
     "roomNumber": "08A-04C",
@@ -88100,9 +88100,9 @@
     "prerequisiteCourses": "(EEE207 AND EEE208) OR (EEE308 AND EEE308L)",
     "labSchedules": [
       {
-        "startTime": "14:00:00",
+        "day": "THURSDAY",
         "endTime": "16:50:00",
-        "day": "THURSDAY"
+        "startTime": "14:00:00"
       }
     ],
     "labSectionId": 191281,
@@ -91641,7 +91641,7 @@
     "courseCredit": 3,
     "courseId": 145,
     "courseType": "THEORY",
-    "faculties": "NHD",
+    "faculties": "IAA",
     "parentSectionId": null,
     "roomName": "08A-04C",
     "roomNumber": "08A-04C",
@@ -91650,28 +91650,28 @@
     "sectionSchedule": {
       "classPairId": 3,
       "classSlotId": 13095,
-      "finalExamDate": "2027-01-12",
-      "finalExamStartTime": "14:00:00",
-      "finalExamEndTime": "16:00:00",
       "midExamDate": "2026-11-26",
-      "midExamStartTime": "14:00:00",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Tuesday, January 12, 2027 2:00 PM - 4:00 PM",
-      "midExamDetail": "Thursday, November 26, 2026 2:00 PM - 4:00 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-12",
+      "midExamDetail": "Thursday, November 26, 2026 2:00 PM - 4:00 PM",
       "classSchedules": [
         {
-          "startTime": "15:30:00",
+          "day": "MONDAY",
           "endTime": "16:50:00",
-          "day": "MONDAY"
+          "startTime": "15:30:00"
         },
         {
-          "startTime": "15:30:00",
+          "day": "WEDNESDAY",
           "endTime": "16:50:00",
-          "day": "WEDNESDAY"
+          "startTime": "15:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Tuesday, January 12, 2027 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -105463,7 +105463,7 @@
     "courseCredit": 3,
     "courseId": 1674,
     "courseType": "THEORY",
-    "faculties": "NHD",
+    "faculties": "SMC",
     "parentSectionId": null,
     "roomName": "08A-01C",
     "roomNumber": "08A-01C",
@@ -106109,23 +106109,23 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": null,
-      "finalExamStartTime": null,
-      "finalExamEndTime": null,
       "midExamDate": null,
-      "midExamStartTime": null,
-      "midExamEndTime": null,
-      "finalExamDetail": null,
-      "midExamDetail": null,
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": null,
+      "midExamDetail": null,
       "classSchedules": [
         {
-          "startTime": "11:00:00",
+          "day": "TUESDAY",
           "endTime": "13:50:00",
-          "day": "TUESDAY"
+          "startTime": "11:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": null,
+      "finalExamDetail": null,
+      "finalExamEndTime": null,
+      "midExamStartTime": null,
+      "finalExamStartTime": null
     },
     "sectionType": "LAB",
     "semesterSessionId": 20263,
@@ -109845,7 +109845,7 @@
     "courseCredit": 3,
     "courseId": 1672,
     "courseType": "THEORY",
-    "faculties": "NHD",
+    "faculties": "SMC",
     "parentSectionId": null,
     "roomName": "08A-01C",
     "roomNumber": "08A-01C",
@@ -111582,23 +111582,23 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": null,
-      "finalExamStartTime": null,
-      "finalExamEndTime": null,
       "midExamDate": null,
-      "midExamStartTime": null,
-      "midExamEndTime": null,
-      "finalExamDetail": null,
-      "midExamDetail": null,
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": null,
+      "midExamDetail": null,
       "classSchedules": [
         {
-          "startTime": "14:00:00",
+          "day": "SUNDAY",
           "endTime": "16:50:00",
-          "day": "SUNDAY"
+          "startTime": "14:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": null,
+      "finalExamDetail": null,
+      "finalExamEndTime": null,
+      "midExamStartTime": null,
+      "finalExamStartTime": null
     },
     "sectionType": "LAB",
     "semesterSessionId": 20263,
