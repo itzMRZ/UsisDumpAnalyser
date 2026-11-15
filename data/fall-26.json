@@ -5880,7 +5880,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 40,
-    "consumedSeat": 40,
+    "consumedSeat": 38,
     "courseCode": "MAT110",
     "courseCredit": 3,
     "courseId": 1439,
@@ -12810,7 +12810,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 40,
-    "consumedSeat": 39,
+    "consumedSeat": 38,
     "courseCode": "MAT216",
     "courseCredit": 3,
     "courseId": 1362,
@@ -20969,7 +20969,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 2,
-    "consumedSeat": 1,
+    "consumedSeat": 0,
     "courseCode": "ECE101L",
     "courseCredit": 1,
     "courseId": 1675,
@@ -33976,7 +33976,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 32,
-    "consumedSeat": 28,
+    "consumedSeat": 27,
     "courseCode": "FIN301",
     "courseCredit": 3,
     "courseId": 2027,
@@ -44799,7 +44799,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 38,
-    "consumedSeat": 36,
+    "consumedSeat": 35,
     "courseCode": "CSE330",
     "courseCredit": 3,
     "courseId": 1015,
@@ -46768,7 +46768,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 37,
-    "consumedSeat": 28,
+    "consumedSeat": 27,
     "courseCode": "MKT422",
     "courseCredit": 3,
     "courseId": 1800,
@@ -47487,7 +47487,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 36,
-    "consumedSeat": 37,
+    "consumedSeat": 36,
     "courseCode": "CSE260",
     "courseCredit": 3,
     "courseId": 1122,
@@ -50468,28 +50468,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": "2027-01-07",
-      "finalExamStartTime": "14:00:00",
-      "finalExamEndTime": "16:00:00",
       "midExamDate": "2026-11-21",
-      "midExamStartTime": "14:00:00",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Jan 7, 2027 2:00 PM - 4:00 PM",
-      "midExamDetail": "Nov 21, 2026 2:00 PM - 4:00 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-07",
+      "midExamDetail": "Nov 21, 2026 2:00 PM - 4:00 PM",
       "classSchedules": [
         {
-          "startTime": "15:30:00",
+          "day": "SATURDAY",
           "endTime": "16:50:00",
-          "day": "SATURDAY"
+          "startTime": "15:30:00"
         },
         {
-          "startTime": "15:30:00",
+          "day": "THURSDAY",
           "endTime": "16:50:00",
-          "day": "THURSDAY"
+          "startTime": "15:30:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Jan 7, 2027 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -55799,59 +55799,6 @@
   },
   {
     "academicDegree": "UNDERGRADUATE",
-    "capacity": 40,
-    "consumedSeat": 37,
-    "courseCode": "ANT101",
-    "courseCredit": 3,
-    "courseId": 1522,
-    "courseType": "THEORY",
-    "faculties": "RARA",
-    "parentSectionId": null,
-    "roomName": "08B-10C",
-    "roomNumber": "08B-10C",
-    "sectionId": 188982,
-    "sectionName": "06",
-    "sectionSchedule": {
-      "classPairId": null,
-      "classSlotId": null,
-      "midExamDate": "2026-11-25",
-      "classEndDate": "2027-01-04",
-      "finalExamDate": "2027-01-11",
-      "midExamDetail": "Nov 25, 2026 4:30 PM - 6:30 PM",
-      "classSchedules": [
-        {
-          "day": "SUNDAY",
-          "endTime": "09:20:00",
-          "startTime": "08:00:00"
-        },
-        {
-          "day": "TUESDAY",
-          "endTime": "09:20:00",
-          "startTime": "08:00:00"
-        }
-      ],
-      "classStartDate": "2026-10-03",
-      "midExamEndTime": "18:30:00",
-      "finalExamDetail": "Jan 11, 2027 4:30 PM - 6:30 PM",
-      "finalExamEndTime": "18:30:00",
-      "midExamStartTime": "16:30:00",
-      "finalExamStartTime": "16:30:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20263,
-    "courseName": "INTRODUCTION TO ANTHROPOLOGY",
-    "prerequisiteCourses": null,
-    "labSchedules": null,
-    "labSectionId": null,
-    "labCourseCode": null,
-    "labFaculties": null,
-    "labName": null,
-    "labRoomName": null,
-    "preRegLabSchedule": null,
-    "preRegSchedule": "SUNDAY(8:00 AM-9:20 AM-08B-10C)\nTUESDAY(8:00 AM-9:20 AM-08B-10C)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
     "capacity": 30,
     "consumedSeat": 29,
     "courseCode": "HUM101",
@@ -55955,59 +55902,6 @@
     "labRoomName": null,
     "preRegLabSchedule": null,
     "preRegSchedule": "SUNDAY(9:30 AM-10:50 AM-07H-26C)\nTUESDAY(9:30 AM-10:50 AM-07H-26C)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
-    "capacity": 37,
-    "consumedSeat": 37,
-    "courseCode": "MIS445",
-    "courseCredit": 3,
-    "courseId": 2479,
-    "courseType": "THEORY",
-    "faculties": "NLA",
-    "parentSectionId": null,
-    "roomName": "AS1-10L",
-    "roomNumber": "AS1-10L",
-    "sectionId": 190619,
-    "sectionName": "01",
-    "sectionSchedule": {
-      "classPairId": null,
-      "classSlotId": null,
-      "midExamDate": "2026-11-25",
-      "classEndDate": "2027-01-04",
-      "finalExamDate": "2027-01-11",
-      "midExamDetail": "Nov 25, 2026 2:00 PM - 4:00 PM",
-      "classSchedules": [
-        {
-          "day": "SUNDAY",
-          "endTime": "09:20:00",
-          "startTime": "08:00:00"
-        },
-        {
-          "day": "TUESDAY",
-          "endTime": "09:20:00",
-          "startTime": "08:00:00"
-        }
-      ],
-      "classStartDate": "2026-10-03",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Jan 11, 2027 2:00 PM - 4:00 PM",
-      "finalExamEndTime": "16:00:00",
-      "midExamStartTime": "14:00:00",
-      "finalExamStartTime": "14:00:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20263,
-    "courseName": "ADVANCED DATA VISUALIZATION AND SPREADSHEET MODELING",
-    "prerequisiteCourses": "(MSC321 AND BUS232)",
-    "labSchedules": null,
-    "labSectionId": null,
-    "labCourseCode": null,
-    "labFaculties": null,
-    "labName": null,
-    "labRoomName": null,
-    "preRegLabSchedule": null,
-    "preRegSchedule": "SUNDAY(8:00 AM-9:20 AM-AS1-10L)\nTUESDAY(8:00 AM-9:20 AM-AS1-10L)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -56226,59 +56120,6 @@
     "labRoomName": null,
     "preRegLabSchedule": null,
     "preRegSchedule": "SUNDAY(11:00 AM-12:20 PM-12A-07C)\nTUESDAY(11:00 AM-12:20 PM-12A-07C)"
-  },
-  {
-    "academicDegree": "UNDERGRADUATE",
-    "capacity": 40,
-    "consumedSeat": 42,
-    "courseCode": "STA201",
-    "courseCredit": 3,
-    "courseId": 1540,
-    "courseType": "THEORY",
-    "faculties": "RFI",
-    "parentSectionId": null,
-    "roomName": "09H-35C",
-    "roomNumber": "09H-35C",
-    "sectionId": 190812,
-    "sectionName": "03",
-    "sectionSchedule": {
-      "classPairId": 2,
-      "classSlotId": 13092,
-      "midExamDate": "2026-11-23",
-      "classEndDate": "2027-01-04",
-      "finalExamDate": "2027-01-09",
-      "midExamDetail": "Monday, November 23, 2026 11:00 AM - 1:00 PM",
-      "classSchedules": [
-        {
-          "day": "SUNDAY",
-          "endTime": "12:20:00",
-          "startTime": "11:00:00"
-        },
-        {
-          "day": "TUESDAY",
-          "endTime": "12:20:00",
-          "startTime": "11:00:00"
-        }
-      ],
-      "classStartDate": "2026-10-03",
-      "midExamEndTime": "13:00:00",
-      "finalExamDetail": "Saturday, January 9, 2027 11:00 AM - 1:00 PM",
-      "finalExamEndTime": "13:00:00",
-      "midExamStartTime": "11:00:00",
-      "finalExamStartTime": "11:00:00"
-    },
-    "sectionType": "OTHER",
-    "semesterSessionId": 20263,
-    "courseName": "ELEMENTS OF STATISTICS AND PROBABILITY",
-    "prerequisiteCourses": null,
-    "labSchedules": null,
-    "labSectionId": null,
-    "labCourseCode": null,
-    "labFaculties": null,
-    "labName": null,
-    "labRoomName": null,
-    "preRegLabSchedule": null,
-    "preRegSchedule": "SUNDAY(11:00 AM-12:20 PM-09H-35C)\nTUESDAY(11:00 AM-12:20 PM-09H-35C)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -59364,6 +59205,165 @@
     "labRoomName": null,
     "preRegLabSchedule": null,
     "preRegSchedule": "MONDAY(8:00 AM-9:20 AM-09C-14C)\nWEDNESDAY(8:00 AM-9:20 AM-09C-14C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
+    "capacity": 40,
+    "consumedSeat": 37,
+    "courseCode": "ANT101",
+    "courseCredit": 3,
+    "courseId": 1522,
+    "courseType": "THEORY",
+    "faculties": "RARA",
+    "parentSectionId": null,
+    "roomName": "08B-10C",
+    "roomNumber": "08B-10C",
+    "sectionId": 188982,
+    "sectionName": "06",
+    "sectionSchedule": {
+      "classPairId": null,
+      "classSlotId": null,
+      "midExamDate": "2026-11-25",
+      "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-11",
+      "midExamDetail": "Nov 25, 2026 4:30 PM - 6:30 PM",
+      "classSchedules": [
+        {
+          "day": "SUNDAY",
+          "endTime": "09:20:00",
+          "startTime": "08:00:00"
+        },
+        {
+          "day": "TUESDAY",
+          "endTime": "09:20:00",
+          "startTime": "08:00:00"
+        }
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "18:30:00",
+      "finalExamDetail": "Jan 11, 2027 4:30 PM - 6:30 PM",
+      "finalExamEndTime": "18:30:00",
+      "midExamStartTime": "16:30:00",
+      "finalExamStartTime": "16:30:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20263,
+    "courseName": "INTRODUCTION TO ANTHROPOLOGY",
+    "prerequisiteCourses": null,
+    "labSchedules": null,
+    "labSectionId": null,
+    "labCourseCode": null,
+    "labFaculties": null,
+    "labName": null,
+    "labRoomName": null,
+    "preRegLabSchedule": null,
+    "preRegSchedule": "SUNDAY(8:00 AM-9:20 AM-08B-10C)\nTUESDAY(8:00 AM-9:20 AM-08B-10C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
+    "capacity": 40,
+    "consumedSeat": 42,
+    "courseCode": "STA201",
+    "courseCredit": 3,
+    "courseId": 1540,
+    "courseType": "THEORY",
+    "faculties": "RFI",
+    "parentSectionId": null,
+    "roomName": "09H-35C",
+    "roomNumber": "09H-35C",
+    "sectionId": 190812,
+    "sectionName": "03",
+    "sectionSchedule": {
+      "classPairId": 2,
+      "classSlotId": 13092,
+      "midExamDate": "2026-11-23",
+      "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-09",
+      "midExamDetail": "Monday, November 23, 2026 11:00 AM - 1:00 PM",
+      "classSchedules": [
+        {
+          "day": "SUNDAY",
+          "endTime": "12:20:00",
+          "startTime": "11:00:00"
+        },
+        {
+          "day": "TUESDAY",
+          "endTime": "12:20:00",
+          "startTime": "11:00:00"
+        }
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "13:00:00",
+      "finalExamDetail": "Saturday, January 9, 2027 11:00 AM - 1:00 PM",
+      "finalExamEndTime": "13:00:00",
+      "midExamStartTime": "11:00:00",
+      "finalExamStartTime": "11:00:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20263,
+    "courseName": "ELEMENTS OF STATISTICS AND PROBABILITY",
+    "prerequisiteCourses": null,
+    "labSchedules": null,
+    "labSectionId": null,
+    "labCourseCode": null,
+    "labFaculties": null,
+    "labName": null,
+    "labRoomName": null,
+    "preRegLabSchedule": null,
+    "preRegSchedule": "SUNDAY(11:00 AM-12:20 PM-09H-35C)\nTUESDAY(11:00 AM-12:20 PM-09H-35C)"
+  },
+  {
+    "academicDegree": "UNDERGRADUATE",
+    "capacity": 37,
+    "consumedSeat": 37,
+    "courseCode": "MIS445",
+    "courseCredit": 3,
+    "courseId": 2479,
+    "courseType": "THEORY",
+    "faculties": "NLA",
+    "parentSectionId": null,
+    "roomName": "AS1-10L",
+    "roomNumber": "AS1-10L",
+    "sectionId": 190619,
+    "sectionName": "01",
+    "sectionSchedule": {
+      "classPairId": null,
+      "classSlotId": null,
+      "midExamDate": "2026-11-25",
+      "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-11",
+      "midExamDetail": "Nov 25, 2026 2:00 PM - 4:00 PM",
+      "classSchedules": [
+        {
+          "day": "SUNDAY",
+          "endTime": "09:20:00",
+          "startTime": "08:00:00"
+        },
+        {
+          "day": "TUESDAY",
+          "endTime": "09:20:00",
+          "startTime": "08:00:00"
+        }
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Jan 11, 2027 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
+    },
+    "sectionType": "OTHER",
+    "semesterSessionId": 20263,
+    "courseName": "ADVANCED DATA VISUALIZATION AND SPREADSHEET MODELING",
+    "prerequisiteCourses": "(MSC321 AND BUS232)",
+    "labSchedules": null,
+    "labSectionId": null,
+    "labCourseCode": null,
+    "labFaculties": null,
+    "labName": null,
+    "labRoomName": null,
+    "preRegLabSchedule": null,
+    "preRegSchedule": "SUNDAY(8:00 AM-9:20 AM-AS1-10L)\nTUESDAY(8:00 AM-9:20 AM-AS1-10L)"
   },
   {
     "academicDegree": "UNDERGRADUATE",
@@ -75745,7 +75745,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 35,
-    "consumedSeat": 35,
+    "consumedSeat": 34,
     "courseCode": "EEE101",
     "courseCredit": 3,
     "courseId": 1672,
@@ -84671,7 +84671,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 38,
-    "consumedSeat": 36,
+    "consumedSeat": 35,
     "courseCode": "CSE221",
     "courseCredit": 3,
     "courseId": 2127,
@@ -88295,28 +88295,28 @@
     "sectionSchedule": {
       "classPairId": null,
       "classSlotId": null,
-      "finalExamDate": "2027-01-11",
-      "finalExamStartTime": "14:00:00",
-      "finalExamEndTime": "16:00:00",
       "midExamDate": "2026-11-25",
-      "midExamStartTime": "14:00:00",
-      "midExamEndTime": "16:00:00",
-      "finalExamDetail": "Jan 11, 2027 2:00 PM - 4:00 PM",
-      "midExamDetail": "Nov 25, 2026 2:00 PM - 4:00 PM",
-      "classStartDate": "2026-10-03",
       "classEndDate": "2027-01-04",
+      "finalExamDate": "2027-01-11",
+      "midExamDetail": "Nov 25, 2026 2:00 PM - 4:00 PM",
       "classSchedules": [
         {
-          "startTime": "08:00:00",
+          "day": "SUNDAY",
           "endTime": "09:20:00",
-          "day": "SUNDAY"
+          "startTime": "08:00:00"
         },
         {
-          "startTime": "08:00:00",
+          "day": "TUESDAY",
           "endTime": "09:20:00",
-          "day": "TUESDAY"
+          "startTime": "08:00:00"
         }
-      ]
+      ],
+      "classStartDate": "2026-10-03",
+      "midExamEndTime": "16:00:00",
+      "finalExamDetail": "Jan 11, 2027 2:00 PM - 4:00 PM",
+      "finalExamEndTime": "16:00:00",
+      "midExamStartTime": "14:00:00",
+      "finalExamStartTime": "14:00:00"
     },
     "sectionType": "OTHER",
     "semesterSessionId": 20263,
@@ -112406,7 +112406,7 @@
   {
     "academicDegree": "UNDERGRADUATE",
     "capacity": 40,
-    "consumedSeat": 39,
+    "consumedSeat": 37,
     "courseCode": "ECO101",
     "courseCredit": 3,
     "courseId": 1527,
